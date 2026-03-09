@@ -1,34 +1,55 @@
 package com.mymodels.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 
 class TokenManager(context: Context) {
 
-    private val prefs =
-        context.getSharedPreferences("mymodels", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("mymodels_tokens", Context.MODE_PRIVATE)
 
-    fun saveHFToken(token: String) {
-
-        prefs.edit().putString("hf_token", token).apply()
-
+    companion object {
+        private const val HF_TOKEN = "huggingface_token"
+        private const val OLLAMA_TOKEN = "ollama_token"
     }
 
-    fun getHFToken(): String? {
+    // =========================
+    // HUGGINGFACE TOKEN
+    // =========================
 
-        return prefs.getString("hf_token", null)
-
+    fun saveHuggingFaceToken(token: String) {
+        prefs.edit().putString(HF_TOKEN, token).apply()
     }
+
+    fun getHuggingFaceToken(): String? {
+        return prefs.getString(HF_TOKEN, null)
+    }
+
+    fun clearHuggingFaceToken() {
+        prefs.edit().remove(HF_TOKEN).apply()
+    }
+
+    // =========================
+    // OLLAMA TOKEN
+    // =========================
 
     fun saveOllamaToken(token: String) {
-
-        prefs.edit().putString("ollama_token", token).apply()
-
+        prefs.edit().putString(OLLAMA_TOKEN, token).apply()
     }
 
     fun getOllamaToken(): String? {
-
-        return prefs.getString("ollama_token", null)
-
+        return prefs.getString(OLLAMA_TOKEN, null)
     }
 
+    fun clearOllamaToken() {
+        prefs.edit().remove(OLLAMA_TOKEN).apply()
+    }
+
+    // =========================
+    // CLEAR ALL
+    // =========================
+
+    fun clearAllTokens() {
+        prefs.edit().clear().apply()
+    }
 }
