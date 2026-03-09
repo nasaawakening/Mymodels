@@ -1,2 +1,14 @@
-# Mymodels
-This is a Ai that run with hugging face and ollama, it's free
+# MyModels
+
+Android AI model runner.
+
+Features:
+
+- Search HuggingFace models
+- Search Ollama models
+- Download models
+- Run GGUF models offline
+- ChatGPT style interface
+
+Engine:
+llama.cpp
