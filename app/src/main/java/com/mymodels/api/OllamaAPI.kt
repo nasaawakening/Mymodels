@@ -2,35 +2,28 @@ package com.mymodels.api
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
 
-class OllamaAPI(
-    private val baseUrl: String,
-    private val token: String?
-) {
+class OllamaAPI {
 
-    private val client = OkHttpClient()
+    private val client=OkHttpClient()
 
-    fun listModels(): String {
+    fun listModels():List<String>{
 
-        val url = "$baseUrl/api/tags"
+        val request=Request.Builder()
+            .url("https://ollama.ai/library")
+            .build()
 
-        val requestBuilder = Request.Builder()
-            .url(url)
+        val response=client.newCall(request).execute()
 
-        if (token != null) {
+        val json=JSONArray(response.body!!.string())
 
-            requestBuilder.addHeader(
-                "Authorization",
-                "Bearer $token"
-            )
+        val models= mutableListOf<String>()
 
+        for(i in 0 until json.length()){
+            models.add(json.getJSONObject(i).getString("name"))
         }
 
-        val request = requestBuilder.build()
-
-        val response = client.newCall(request).execute()
-
-        return response.body!!.string()
+        return models
     }
-
 }
