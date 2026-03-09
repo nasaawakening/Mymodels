@@ -1,21 +1,16 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.22.1)
 
-project(mymodels)
+project("llama")
 
 add_library(
         llama
         SHARED
-        main.cpp
-        ggml.c
-        llama.cpp
-)
+        llama.cpp)
 
 find_library(
         log-lib
-        log
-)
+        log)
 
 target_link_libraries(
         llama
-        ${log-lib}
-)
+        ${log-lib})
