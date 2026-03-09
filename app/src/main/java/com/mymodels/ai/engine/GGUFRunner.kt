@@ -2,14 +2,14 @@ package com.mymodels.ai.engine
 
 class GGUFRunner {
 
-fun run(model:String,prompt:String):String{
+    external fun loadModel(path:String)
 
-val process=Runtime.getRuntime().exec(
-"./llama-cli -m $model -p \"$prompt\""
-)
+    external fun prompt(text:String):String
 
-return process.inputStream.bufferedReader().readText()
+    companion object{
 
-}
-
+        init{
+            System.loadLibrary("llama")
+        }
+    }
 }
