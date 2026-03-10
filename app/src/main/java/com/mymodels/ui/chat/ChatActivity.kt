@@ -3,44 +3,30 @@ package com.mymodels.ui.chat
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import android.widget.Button
+import android.widget.EditText
 import com.mymodels.R
-import com.mymodels.ai.engine.GGUFRunner
-import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
 
-    private val adapter = MessageAdapter()
-    private val runner = GGUFRunner()
+    private lateinit var chatList: RecyclerView
+    private lateinit var input: EditText
+    private lateinit var sendButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        chatList.layoutManager = LinearLayoutManager(this)
-        chatList.adapter = adapter
+        chatList = findViewById(R.id.chatList)
+        input = findViewById(R.id.input)
+        sendButton = findViewById(R.id.sendButton)
 
-        val model = intent.getStringExtra("model") ?: ""
+        chatList.layoutManager = LinearLayoutManager(this)
 
         sendButton.setOnClickListener {
-
-            val prompt = input.text.toString()
-
-            if(prompt.isEmpty()) return@setOnClickListener
-
-            adapter.add(Message(prompt,true))
-
+            val message = input.text.toString()
             input.setText("")
-
-            Thread {
-
-                val response = runner.prompt(prompt)
-
-                runOnUiThread {
-                    adapter.add(Message(response,false))
-                    chatList.scrollToPosition(adapter.itemCount-1)
-                }
-
-            }.start()
         }
     }
 }
