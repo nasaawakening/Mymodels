@@ -127,7 +127,7 @@ class ChatActivity : AppCompatActivity() {
 
         sendButton.setOnClickListener {
 
-            val message = input.text.toString()
+            val userMessage = input.text.toString()
 
             if (message.isEmpty()) return@setOnClickListener
 
