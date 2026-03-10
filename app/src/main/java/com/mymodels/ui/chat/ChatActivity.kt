@@ -59,10 +59,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (text.isEmpty()) return
 
-        ChatMessage(
-            text = text,
-            role = "user"
-         )
+        ChatMessage(text = text, role = "user")
 
         currentSession.messages.add(userMessage)
 
