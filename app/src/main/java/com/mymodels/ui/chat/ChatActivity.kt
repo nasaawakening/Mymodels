@@ -14,6 +14,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var input: EditText
     private lateinit var sendButton: Button
     private lateinit var newChatButton: Button
+    private val sessions = mutableListOf<ChatSession>()
+    private var currentSession: ChatSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
