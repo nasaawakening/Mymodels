@@ -2,10 +2,11 @@ package com.mymodels.downloader
 
 import okhttp3.OkHttpClient
 import com.mymodels.utils.NotificationHelper
+import android.content.Context
 import okhttp3.Request
 import java.io.File
 
-class ModelDownloader {
+class ModelDownloader(private val context: Context) {
 
     private val client=OkHttpClient()
 
