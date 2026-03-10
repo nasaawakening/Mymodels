@@ -29,5 +29,17 @@ object ChatStorage {
         val type = Array<ChatSession>::class.java
 
         return gson.fromJson(json, type).toMutableList()
-    }
+   }
+    
+   fun export(context: Context, session: ChatSession) {
+
+        val json = gson.toJson(session)
+
+        val file = File(
+        context.getExternalFilesDir(null),
+        "${session.title}.json"
+       )
+
+        file.writeText(json)
+   }
 }
