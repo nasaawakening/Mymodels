@@ -31,6 +31,15 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_chat)
+     
+        //=====================
+        // SEND CHAT
+        //=====================
+
+          val intent = Intent(this, AIService::class.java)
+          intent.putExtra("prompt", userMessage)
+
+          startForegroundService(intent)
 
         // =====================
         // FIND VIEW
