@@ -1,0 +1,10 @@
+<resources>
+
+<string name="app_name">MyModels</string>
+<string name="new_chat">New Chat</string>
+<string name="send">Send</string>
+<string name="settings">Settings</string>
+<string name="language">Language</string>
+<string name="search_models">Search Models</string>
+
+</resources>
