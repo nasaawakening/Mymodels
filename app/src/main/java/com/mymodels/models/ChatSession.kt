@@ -1,5 +1,7 @@
-ChatSession(
-    id = System.currentTimeMillis(),
-    title = "New Chat",
-    messages = mutableListOf()
+package com.mymodels.models
+
+data class ChatSession(
+    val id: Long,
+    val title: String,
+    val messages: MutableList<ChatMessage>
 )
