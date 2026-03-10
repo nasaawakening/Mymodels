@@ -1,5 +1,10 @@
 <resources>
+
 <string name="app_name">MyModels</string>
-<string name="send">Send</string>
-<string name="search_models">Search Models</string>
+<string name="new_chat">Chat Baru</string>
+<string name="send">Kirim</string>
+<string name="settings">Pengaturan</string>
+<string name="language">Bahasa</string>
+<string name="search_models">Cari models</string>
+
 </resources>
