@@ -2,12 +2,12 @@ package com.mymodels.ui.chat
 
 import android.os.Bundle
 import android.widget.Button
+import com.mymodels.models.ChatMessage
+import com.mymodels.models.ChatSession
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mymodels.models.ChatMessage
-import com.mymodels.models.ChatSession
 import com.mymodels.R
 import com.mymodels.utils.NotificationHelper
 
