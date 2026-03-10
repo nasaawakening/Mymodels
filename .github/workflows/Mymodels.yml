@@ -5,13 +5,17 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Java
@@ -20,36 +24,46 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant permission
+      - name: Grant gradlew permission
         run: chmod +x gradlew
 
       - name: Build APK
         run: ./gradlew assembleDebug
 
-      - name: Get Version Name
+      - name: Get versionName
         id: version
         run: |
           VERSION=$(grep versionName app/build.gradle | head -1 | awk -F '"' '{print $2}')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Rename APK
-        run: |
-          mkdir release
+      - name: Create release folder
+        run: mkdir release
 
+      - name: Rename APK files
+        run: |
           cp app/build/outputs/apk/debug/app-arm64-v8a-debug.apk release/Mymodels-${VERSION}-arm64.apk
           cp app/build/outputs/apk/debug/app-armeabi-v7a-debug.apk release/Mymodels-${VERSION}-armeabi.apk
           cp app/build/outputs/apk/debug/app-universal-debug.apk release/Mymodels-${VERSION}.apk
 
-      - name: Create Tag
+      - name: Generate changelog
+        run: |
+          git log -5 --pretty=format:"- %s" > release/CHANGELOG.txt
+
+      - name: Create Git tag
         run: |
           git tag v${VERSION}
           git push origin v${VERSION}
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION }}
-          files: release/*
+          name: MyModels v${{ env.VERSION }}
+          body_path: release/CHANGELOG.txt
+          files: |
+            release/Mymodels-${{ env.VERSION }}.apk
+            release/Mymodels-${{ env.VERSION }}-arm64.apk
+            release/Mymodels-${{ env.VERSION }}-armeabi.apk
