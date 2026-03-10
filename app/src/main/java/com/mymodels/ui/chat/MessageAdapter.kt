@@ -48,6 +48,10 @@ class MessageAdapter(
            messages.add(message)
            notifyItemInserted(messages.size - 1)
           }
+        fun addMessage(message: ChatMessage) {
+           messages.add(message)
+           notifyItemInserted(messages.size - 1)
+          }
        }
     }
 
