@@ -60,9 +60,10 @@ class ChatActivity : AppCompatActivity() {
 
         newChatButton.setOnClickListener {
 
-            val newSession = ChatSession(
-                System.currentTimeMillis(),
-                mutableListOf()
+            val firstSession = ChatSession(
+            id = System.currentTimeMillis(),
+            title = "New Chat",
+            messages = mutableListOf()
             )
 
             sessions.add(newSession)
