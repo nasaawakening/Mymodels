@@ -81,10 +81,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun simulateAIResponse(userText: String) {
 
-        val aiMessage = ChatMessage(
-            text = "AI Response: $userText",
-            isUser = false
-        )
+        val aiMessage = ChatMessage(text = "AI response", role "assistant")
 
         currentSession.messages.add(aiMessage)
 
