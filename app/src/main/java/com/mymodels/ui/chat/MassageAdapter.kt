@@ -1,33 +1,54 @@
 package com.mymodels.ui.chat
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mymodels.R
+import com.mymodels.databinding.ItemAiMessageBinding
+import com.mymodels.databinding.ItemUserMessageBinding
+import com.mymodels.models.ChatMessage
 
-class MassageAdapter(
-    private val messages: List<String>
-) : RecyclerView.Adapter<MassageAdapter.ViewHolder>() {
+class MessageAdapter(
+    private val messages: MutableList<ChatMessage>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val text: TextView = view.findViewById(R.id.messageText)
+    private val USER = 0
+    private val AI = 1
+
+    override fun getItemViewType(position: Int): Int {
+        return if (messages[position].role == "user") USER else AI
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user_message, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
 
-        return ViewHolder(view)
+        return if (viewType == USER) {
+            val binding = ItemUserMessageBinding.inflate(inflater, parent, false)
+            UserHolder(binding)
+        } else {
+            val binding = ItemAiMessageBinding.inflate(inflater, parent, false)
+            AIHolder(binding)
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.text.text = messages[position]
+    override fun getItemCount() = messages.size
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+        val msg = messages[position]
+
+        if (holder is UserHolder) {
+            holder.binding.textUser.text = msg.text
+        }
+
+        if (holder is AIHolder) {
+            holder.binding.textAi.text = msg.text
+        }
     }
 
-    override fun getItemCount(): Int {
-        return messages.size
-    }
+    class UserHolder(val binding: ItemUserMessageBinding)
+        : RecyclerView.ViewHolder(binding.root)
+
+    class AIHolder(val binding: ItemAiMessageBinding)
+        : RecyclerView.ViewHolder(binding.root)
 }
