@@ -4,20 +4,29 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.mymodels.R
+import com.mymodels.utils.NotificationHelper
 
 class AIService : Service() {
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
 
-        startForeground(1, NotificationHelper.runningNotification(this))
+        val prompt = intent?.getStringExtra("prompt") ?: ""
 
+        // jalankan AI di thread terpisah
         Thread {
 
-            val prompt = intent?.getStringExtra("prompt") ?: ""
+            val response = runModel(prompt)
 
-            val answer = runModel(prompt)
-
-            NotificationHelper.answerNotification(this, answer)
+            // kirim notifikasi jika AI selesai
+            NotificationHelper.show(
+                this,
+                response
+            )
 
             stopSelf()
 
@@ -30,12 +39,20 @@ class AIService : Service() {
         return null
     }
 
-    fun runModel(prompt: String): String {
+    // =====================
+    // AI MODEL INFERENCE
+    // =====================
 
-        // TODO llama.cpp inference
+    private fun runModel(prompt: String): String {
 
+        // simulasi proses AI
         Thread.sleep(3000)
 
-        return "AI Response"
+        // nanti di sini bisa pakai
+        // llama.cpp
+        // Ollama API
+        // HuggingFace API
+
+        return "Jawaban AI untuk: $prompt"
     }
 }
