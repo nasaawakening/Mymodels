@@ -1,25 +1,24 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:text="Language"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <Button
-        android:id="@+id/lightBtn"
-        android:text="Light Theme"
+        android:id="@+id/langEnglish"
+        android:text="English"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/darkBtn"
-        android:text="Dark Theme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/systemBtn"
-        android:text="System Theme"
+        android:id="@+id/langIndonesia"
+        android:text="Indonesia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
