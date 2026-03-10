@@ -25,6 +25,27 @@ class MainActivity : AppCompatActivity() {
 
     private val messages = mutableListOf<ChatMessage>()
 
+    private fun checkModelStatus() {
+
+     val modelFolder = File(filesDir, "models")
+
+     val modelLoaded =
+         modelFolder.exists() &&
+         modelFolder.listFiles()?.isNotEmpty() == true
+
+     if (modelLoaded) {
+
+         emptyView.visibility = View.GONE
+         chatRecycler.visibility = View.VISIBLE
+
+     } else {
+
+         emptyView.visibility = View.VISIBLE
+         chatRecycler.visibility = View.GONE
+
+     }
+ }
+
     private lateinit var aiService: AIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
