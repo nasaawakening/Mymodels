@@ -21,13 +21,13 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        newChatButton = findViewById(R.id.newChatButton)
+        val firstSession = ChatSession(
+        System.currentTimeMillis(),
+        mutableListOf()
+       )
 
-       newChatButton.setOnClickListener {
-
-        messages.clear()
-        chatList.adapter?.notifyDataSetChanged()
-
+        sessions.add(firstSession)
+        currentSession = firstSession
       }
 
         chatList = findViewById(R.id.chatList)
