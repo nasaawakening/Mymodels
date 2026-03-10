@@ -2,11 +2,11 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    tools:context=".MainActivity">
+    android:background="#000000">
+
+    <!-- CHAT LIST -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecycler"
@@ -15,9 +15,37 @@
         android:layout_above="@id/inputContainer"
         android:padding="12dp"/>
 
-    <include
+    <!-- EMPTY MODEL VIEW (hidden at start) -->
+
+    <LinearLayout
         android:id="@+id/emptyView"
-        layout="@layout/empty_model_layout"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_ai"/>
+
+        <TextView
+            android:text="No model loaded"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+            android:id="@+id/btnSelectModel"
+            android:text="Select Model"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
+    <!-- INPUT BAR -->
 
     <LinearLayout
         android:id="@+id/inputContainer"
@@ -28,13 +56,6 @@
         android:background="#111111"
         android:padding="8dp">
 
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_add"
-            android:background="@android:color/transparent"
-            android:tint="#AAAAAA"/>
-
         <EditText
             android:id="@+id/inputMessage"
             android:layout_width="0dp"
@@ -43,16 +64,14 @@
             android:hint="Message MyModels..."
             android:textColor="#FFFFFF"
             android:textColorHint="#777777"
-            android:background="@android:color/transparent"
-            android:padding="10dp"/>
+            android:background="@android:color/transparent"/>
 
         <ImageButton
             android:id="@+id/btnSend"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_send"
-            android:background="@android:color/transparent"
-            android:tint="#FFFFFF"/>
+            android:background="@android:color/transparent"/>
 
     </LinearLayout>
 
