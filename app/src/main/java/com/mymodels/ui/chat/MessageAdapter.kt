@@ -2,10 +2,10 @@ package com.mymodels.ui.chat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.mymodels.models.ChatMessage
 import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.databinding.ItemAiMessageBinding
 import com.mymodels.databinding.ItemUserMessageBinding
-import com.mymodels.models.ChatMessage
 
 class MessageAdapter(
     private val messages: MutableList<ChatMessage>
