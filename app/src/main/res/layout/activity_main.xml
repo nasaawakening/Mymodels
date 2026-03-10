@@ -1,35 +1,102 @@
-<androidx.drawerlayout.widget.DrawerLayout
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".MainActivity">
 
-    <!-- Button -->
-    
-    <Button
-        android:id="@+id/modelsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Models"/>
-
-    <!-- Chat screen -->
-
-    <FrameLayout
-        android:id="@+id/chatContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <!-- Sidebar -->
+    <!-- CHAT LIST -->
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyList"
-        android:layout_width="280dp"
+        android:id="@+id/chatRecycler"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"/>
+        android:layout_above="@id/inputContainer"
+        android:padding="12dp"
+        android:clipToPadding="false"/>
 
-   <!-- Empty State -->
-  
-   <include
+    <!-- EMPTY VIEW (NO MODEL LOADED) -->
+
+    <LinearLayout
         android:id="@+id/emptyView"
-        layout="@layout/empty_model_layout"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-</androidx.drawerlayout.widget.DrawerLayout>
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_ai"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activate Model To Get Started"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="Select the model and download it. After downloading, tap Load next to the model and start chatting."
+            android:textColor="#AAAAAA"
+            android:textAlignment="center"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnSelectModel"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="Select Model"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#DDDDDD"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+
+    <!-- INPUT MESSAGE BAR -->
+
+    <LinearLayout
+        android:id="@+id/inputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#111111"
+        android:padding="8dp">
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_add"
+            android:background="@android:color/transparent"
+            android:tint="#AAAAAA"/>
+
+        <EditText
+            android:id="@+id/inputMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Message MyModels..."
+            android:textColor="#FFFFFF"
+            android:hintTextColor="#777777"
+            android:background="@android:color/transparent"
+            android:padding="10dp"/>
+
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_send"
+            android:background="@android:color/transparent"
+            android:tint="#FFFFFF"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
