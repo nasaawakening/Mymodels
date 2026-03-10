@@ -8,89 +8,53 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.R
 import com.mymodels.models.ChatMessage
-import com.mymodels.models.ChatSession
 
 class ChatActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var inputMessage: EditText
+    private lateinit var chatList: RecyclerView
+    private lateinit var input: EditText
     private lateinit var sendButton: Button
-
     private lateinit var adapter: MessageAdapter
 
-    private lateinit var currentSession: ChatSession
-
-    private val sessions = mutableListOf<ChatSession>()
+    private val messages = mutableListOf<ChatMessage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val chatList = findViewById<RecyclerView>(R.id.chatList)
-        val input = findViewById<EditText>(R.id.input)
-        val sendButton = findViewById<Button>(R.id.sendButton)
+        chatList = findViewById(R.id.chatList)
+        input = findViewById(R.id.input)
+        sendButton = findViewById(R.id.sendButton)
 
-        adapter = MessageAdapter(mutableListOf())
+        adapter = MessageAdapter(messages)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-
-        createNewSession()
+        chatList.layoutManager = LinearLayoutManager(this)
+        chatList.adapter = adapter
 
         sendButton.setOnClickListener {
-            sendMessage()
+
+            val text = input.text.toString()
+
+            if (text.isNotEmpty()) {
+
+                val userMessage = ChatMessage(
+                    text = text,
+                    role = "user"
+                )
+
+                adapter.addMessage(userMessage)
+
+                val aiMessage = ChatMessage(
+                    text = "AI: $text",
+                    role = "assistant"
+                )
+
+                adapter.addMessage(aiMessage)
+
+                input.text.clear()
+
+                chatList.scrollToPosition(messages.size - 1)
+            }
         }
-    }
-
-    private fun createNewSession() {
-
-        currentSession = ChatSession(
-            id = System.currentTimeMillis(),
-            title = "New Chat",
-            messages = mutableListOf()
-        )
-
-        sessions.add(currentSession)
-    }
-
-    private fun sendMessage() {
-
-        val text = inputMessage.text.toString()
-
-        if (text.isEmpty()) return
-
-        ChatMessage(text = text, role = "user")
-
-        currentSession.messages.add(userMessage)
-
-        val userText = input.text.toString()
-
-        val userMessage = ChatMessage(
-            text = userText,
-            role = "user"
-        )
-
-        adapter.addMessage(userMessage)
-
-        inputMessage.text.clear()
-
-        autoScroll()
-
-        simulateAIResponse(text)
-    }
-
-    private fun simulateAIResponse(userText: String) {
-
-        val aiMessage = ChatMessage(text = "AI response", role "assistant")
-
-        currentSession.messages.add(aiMessage)
-
-        adapter.addMessage(aiMessage)
-
-        autoScroll()
-    }
-
-    private fun autoScroll() {
-        recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 }
