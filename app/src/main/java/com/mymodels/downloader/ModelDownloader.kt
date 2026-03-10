@@ -1,6 +1,7 @@
 package com.mymodels.downloader
 
 import okhttp3.OkHttpClient
+import com.mymodels.utils.NotificationHelper
 import okhttp3.Request
 import java.io.File
 
