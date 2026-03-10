@@ -18,7 +18,6 @@ class ModelDownloader(private val context: Context) {
 
         NotificationHelper.show(
         context,
-        "Download selesai",
         "Model berhasil didownload")
 
         val response=client.newCall(request).execute()
