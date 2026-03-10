@@ -2,6 +2,7 @@ package com.mymodels.ui.chat
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.mymodels.ai.AIService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mymodels.utils.NotificationHelper
 import androidx.recyclerview.widget.RecyclerView
