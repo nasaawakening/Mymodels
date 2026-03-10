@@ -4,16 +4,13 @@ plugins {
 }
 
 android {
-
     namespace "com.mymodels"
     compileSdk 34
 
     defaultConfig {
-
         applicationId "com.mymodels"
         minSdk 24
         targetSdk 34
-
         versionCode 1
         versionName "1.0"
     }
@@ -21,11 +18,10 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
-
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
