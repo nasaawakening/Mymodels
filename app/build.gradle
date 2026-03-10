@@ -19,6 +19,15 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include "armeabi-v7a", "arm64-v8a"
+            universalApk true
+        }
+    }
+
     kotlinOptions {
         jvmTarget = "17"
     }
