@@ -33,10 +33,11 @@ class ChatActivity : AppCompatActivity() {
 
         chatList.layoutManager = LinearLayoutManager(this)
 
-        val firstSession = ChatSession(
-            System.currentTimeMillis(),
-            mutableListOf()
-        )
+        currentSession = ChatSession(
+          id = System.currentTimeMillis(),
+          title = "New Chat",
+          messages = mutableListOf()
+         )
 
         sessions.add(firstSession)
         currentSession = firstSession
