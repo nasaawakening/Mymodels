@@ -47,7 +47,8 @@ class MessageAdapter(
         fun addMessage(message: ChatMessage) {
            messages.add(message)
            notifyItemInserted(messages.size - 1)
-         }
+          }
+       }
     }
 
     class UserHolder(val binding: ItemUserMessageBinding)
