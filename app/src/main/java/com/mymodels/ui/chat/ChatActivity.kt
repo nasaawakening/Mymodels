@@ -66,6 +66,13 @@ class ChatActivity : AppCompatActivity() {
 
         currentSession.messages.add(userMessage)
 
+        val userText = input.text.toString()
+
+        val userMessage = ChatMessage(
+            text = userText,
+            role = "user"
+        )
+
         adapter.addMessage(userMessage)
 
         inputMessage.text.clear()
