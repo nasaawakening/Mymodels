@@ -21,6 +21,16 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        val historyAdapter = HistoryAdapter(sessions) { session ->
+
+        currentSession = session
+
+        chatList.adapter?.notifyDataSetChanged()
+
+      }
+
+        historyList.adapter = historyAdapter
+
         val firstSession = ChatSession(
         System.currentTimeMillis(),
         mutableListOf()
