@@ -28,5 +28,11 @@ class ChatActivity : AppCompatActivity() {
             val message = input.text.toString()
             input.setText("")
         }
+
+        NotificationHelper.show(
+        this,
+        "AI selesai menjawab",
+        "Balasan model sudah siap")
+
     }
 }
