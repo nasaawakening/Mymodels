@@ -59,10 +59,10 @@ class ChatActivity : AppCompatActivity() {
 
         if (text.isEmpty()) return
 
-        val userMessage = ChatMessage(
+        ChatMessage(
             text = text,
-            isUser = true
-        )
+            role = "user"
+         )
 
         currentSession.messages.add(userMessage)
 
