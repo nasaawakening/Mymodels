@@ -14,6 +14,11 @@ class ModelDownloader {
             .url(url)
             .build()
 
+        NotificationHelper.show(
+        context,
+        "Download selesai",
+        "Model berhasil didownload")
+
         val response=client.newCall(request).execute()
 
         file.outputStream().use{
