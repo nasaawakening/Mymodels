@@ -13,10 +13,20 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatList: RecyclerView
     private lateinit var input: EditText
     private lateinit var sendButton: Button
+    private lateinit var newChatButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+        newChatButton = findViewById(R.id.newChatButton)
+
+       newChatButton.setOnClickListener {
+
+        messages.clear()
+        chatList.adapter?.notifyDataSetChanged()
+
+      }
 
         chatList = findViewById(R.id.chatList)
         input = findViewById(R.id.input)
