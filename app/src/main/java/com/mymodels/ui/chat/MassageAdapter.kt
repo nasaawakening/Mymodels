@@ -7,46 +7,27 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.R
 
-data class Message(
-    val text:String,
-    val isUser:Boolean
-)
+class MassageAdapter(
+    private val messages: List<String>
+) : RecyclerView.Adapter<MassageAdapter.ViewHolder>() {
 
-class MessageAdapter:RecyclerView.Adapter<MessageAdapter.Holder>(){
-
-    private val messages= mutableListOf<Message>()
-
-    fun add(msg:Message){
-        messages.add(msg)
-        notifyItemInserted(messages.size-1)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val text: TextView = view.findViewById(R.id.messageText)
     }
 
-    class Holder(v:View):RecyclerView.ViewHolder(v){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val text:TextView=v.findViewById(R.id.messageText)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_user_message, parent, false)
+
+        return ViewHolder(view)
     }
 
-    override fun onCreateViewHolder(parent:ViewGroup,viewType:Int):Holder{
-
-        val layout = if(viewType==0)
-            R.layout.item_user_message
-        else
-            R.layout.item_ai_message
-
-        val v=LayoutInflater.from(parent.context).inflate(layout,parent,false)
-
-        return Holder(v)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.text.text = messages[position]
     }
 
-    override fun getItemViewType(position:Int):Int{
-
-        return if(messages[position].isUser) 0 else 1
-    }
-
-    override fun getItemCount():Int=messages.size
-
-    override fun onBindViewHolder(holder:Holder, position:Int){
-
-        holder.text.text=messages[position].text
+    override fun getItemCount(): Int {
+        return messages.size
     }
 }
