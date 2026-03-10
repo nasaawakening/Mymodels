@@ -148,10 +148,9 @@ class ChatActivity : AppCompatActivity() {
 
             // Simulasi AI selesai menjawab
             NotificationHelper.show(
-                this,
-                "AI selesai menjawab",
-                "Balasan model sudah siap"
-            )
+               this,
+            "AI siap digunakan"
+          )
         }
 
         // =====================
