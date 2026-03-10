@@ -113,6 +113,14 @@ class ChatActivity : AppCompatActivity() {
 
         }
 
+        //======================
+        // SEARCH CHAT
+        //======================
+
+        fun searchChat(query: String) {
+
+        }
+
         // =====================
         // SEND MESSAGE
         // =====================
