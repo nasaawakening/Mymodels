@@ -1,5 +1,7 @@
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,9 +21,12 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="MyModels"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
 
@@ -39,21 +44,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/input"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Message AI..."
-                android:layout_height="wrap_content"/>
+                android:singleLine="true"
+                android:padding="10dp"/>
 
             <Button
                 android:id="@+id/sendButton"
-                android:text="Send"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:text="Send"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -65,18 +72,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#111111"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/newChatButton"
-            android:text="New Chat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="New Chat"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historyList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
