@@ -3,15 +3,15 @@ package com.mymodels.ui.chat
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.utils.NotificationHelper
+import androidx.recyclerview.widget.RecyclerView
+import android.content.Intent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.SearchView
 import com.mymodels.R
 import com.mymodels.data.ChatSession
 import com.mymodels.ui.history.HistoryAdapter
-import com.mymodels.utils.NotificationHelper
 
 class ChatActivity : AppCompatActivity() {
 
