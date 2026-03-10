@@ -13,6 +13,7 @@ import com.mymodels.utils.NotificationHelper
 
 class ChatActivity : AppCompatActivity() {
 
+    private lateinit var currentSession: ChatSession
     private lateinit var chatList: RecyclerView
     private lateinit var input: EditText
     private lateinit var sendButton: Button
@@ -39,8 +40,8 @@ class ChatActivity : AppCompatActivity() {
           messages = mutableListOf()
          )
 
-        sessions.add(firstSession)
-        currentSession = firstSession
+        val messages = currentSession.messages
+           adapter.update(currentSession.messages)
 
         sendButton.setOnClickListener {
 
