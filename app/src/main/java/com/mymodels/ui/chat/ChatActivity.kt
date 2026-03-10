@@ -66,11 +66,13 @@ class ChatActivity : AppCompatActivity() {
 
         historyAdapter = HistoryAdapter(sessions) { session ->
 
-            currentSession = session
+        currentSession = session
 
-            chatList.adapter?.notifyDataSetChanged()
+        chatList.adapter?.notifyDataSetChanged()
 
-        }
+       }
+
+        historyList.adapter = historyAdapter
 
         historyList.layoutManager = LinearLayoutManager(this)
         historyList.adapter = historyAdapter
