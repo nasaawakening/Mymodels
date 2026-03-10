@@ -26,9 +26,9 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        inputMessage = findViewById(R.id.inputMessage)
-        sendButton = findViewById(R.id.sendButton)
+        val chatList = findViewById<RecyclerView>(R.id.chatList)
+        val input = findViewById<EditText>(R.id.input)
+        val sendButton = findViewById<Button>(R.id.sendButton)
 
         adapter = MessageAdapter(mutableListOf())
 
