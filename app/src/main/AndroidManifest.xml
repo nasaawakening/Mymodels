@@ -47,6 +47,12 @@
         <activity
             android:name=".ModelsActivity"
             android:exported="false"/>
+         
+        <!-- Service AI -->
+        <service
+            android:name=".ai.AIService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false"/>
 
     </application>
 
