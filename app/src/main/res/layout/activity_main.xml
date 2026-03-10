@@ -26,4 +26,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"/>
 
+   <!-- Empty State -->
+  
+   <include
+        android:id="@+id/emptyView"
+        layout="@layout/empty_model_layout"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>
