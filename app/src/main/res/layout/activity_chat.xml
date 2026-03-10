@@ -1,37 +1,83 @@
-<LinearLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/newChatButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chat Baru"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    <!-- CHAT AREA -->
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="0dp"
+        <!-- TOP BAR -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#202123"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="MyModels"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+        <!-- CHAT LIST -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="Ketik pesan"/>
+            android:padding="10dp"/>
 
-        <Button
-            android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
+        <!-- INPUT AREA -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kirim"/>
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/input"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:hint="Message AI..."
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/sendButton"
+                android:text="Send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+    <!-- SIDEBAR HISTORY -->
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#111111"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/newChatButton"
+            android:text="New Chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
