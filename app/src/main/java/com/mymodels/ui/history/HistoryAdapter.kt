@@ -43,14 +43,14 @@ class HistoryAdapter(
 
         holder.title.text = session.title
 
-        // buka chat
+        // buka chat saat diklik
         holder.itemView.setOnClickListener {
 
             onChatSelected(session)
 
         }
 
-        // rename chat
+        // rename chat saat ditekan lama
         holder.itemView.setOnLongClickListener {
 
             val context = holder.itemView.context
@@ -73,5 +73,17 @@ class HistoryAdapter(
 
             true
         }
+
+    }
+
+    // update list untuk fitur search
+    fun updateList(newList: List<ChatSession>) {
+
+        sessions.clear()
+
+        sessions.addAll(newList)
+
+        notifyDataSetChanged()
+
     }
 }
