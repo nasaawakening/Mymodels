@@ -2,104 +2,94 @@ package com.mymodels.ui.chat
 
 import android.os.Bundle
 import android.widget.Button
-import com.mymodels.models.ChatMessage
-import com.mymodels.models.ChatSession
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.R
-import com.mymodels.utils.NotificationHelper
+import com.mymodels.models.ChatMessage
+import com.mymodels.models.ChatSession
 
 class ChatActivity : AppCompatActivity() {
 
-    private lateinit var currentSession: ChatSession
-    private lateinit var chatList: RecyclerView
-    private lateinit var input: EditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var inputMessage: EditText
     private lateinit var sendButton: Button
-    private lateinit var newChatButton: Button
+
+    private lateinit var adapter: MessageAdapter
+
+    private lateinit var currentSession: ChatSession
 
     private val sessions = mutableListOf<ChatSession>()
-    private var currentSession: ChatSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_chat)
 
-        chatList = findViewById(R.id.chatList)
-        input = findViewById(R.id.input)
+        recyclerView = findViewById(R.id.recyclerView)
+        inputMessage = findViewById(R.id.inputMessage)
         sendButton = findViewById(R.id.sendButton)
-        newChatButton = findViewById(R.id.newChatButton)
 
-        chatList.layoutManager = LinearLayoutManager(this)
+        adapter = MessageAdapter(mutableListOf())
 
-        currentSession = ChatSession(
-          id = System.currentTimeMillis(),
-          title = "New Chat",
-          messages = mutableListOf()
-         )
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
-        val messages = currentSession.messages
-           adapter.update(currentSession.messages)
+        createNewSession()
 
         sendButton.setOnClickListener {
-
-            val userMessage = input.text.toString()
-
-            if (userMessage.isEmpty()) return@setOnClickListener
-
-            currentSession?.messages?.add(
-                ChatMessage("user", userMessage)
-            )
-
-            input.setText("")
-
-            chatList.adapter?.notifyDataSetChanged()
-
-            fakeAI()
+            sendMessage()
         }
+    }
 
-        newChatButton.setOnClickListener {
+    private fun createNewSession() {
 
-            val newSession = ChatSession(
+        currentSession = ChatSession(
             id = System.currentTimeMillis(),
             title = "New Chat",
             messages = mutableListOf()
-           )
+        )
 
-            sessions.add(newSession)
-            currentSession = newSession
-
-            chatList.adapter?.notifyDataSetChanged()
-        }
+        sessions.add(currentSession)
     }
 
-    private fun fakeAI() {
+    private fun sendMessage() {
 
-        Thread {
+        val text = inputMessage.text.toString()
 
-            Thread.sleep(2000)
+        if (text.isEmpty()) return
 
-            runOnUiThread {
+        val userMessage = ChatMessage(
+            text = text,
+            isUser = true
+        )
 
-                currentSession?.messages?.add(
-                    ChatMessage("ai", "Ini adalah balasan AI")
-                )
+        currentSession.messages.add(userMessage)
 
-                chatList.adapter?.notifyDataSetChanged()
+        adapter.addMessage(userMessage)
 
-                NotificationHelper.show(
-                    this,
-                    "AI selesai menjawab"
-                )
-            }
+        inputMessage.text.clear()
 
-        }.start()
+        autoScroll()
+
+        simulateAIResponse(text)
     }
 
-    fun searchChat(query: String) {
+    private fun simulateAIResponse(userText: String) {
 
-        // nanti untuk fitur search history
+        val aiMessage = ChatMessage(
+            text = "AI Response: $userText",
+            isUser = false
+        )
+
+        currentSession.messages.add(aiMessage)
+
+        adapter.addMessage(aiMessage)
+
+        autoScroll()
+    }
+
+    private fun autoScroll() {
+        recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 }
