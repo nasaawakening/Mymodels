@@ -51,8 +51,8 @@
         <!-- Service AI -->
         <service
             android:name=".ai.AIService"
-            android:foregroundServiceType="dataSync"
-            android:exported="false"/>
+            android:exported="false"
+            android:foregroundServiceType="dataSync"/>
 
     </application>
 
