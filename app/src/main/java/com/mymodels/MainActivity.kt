@@ -3,14 +3,20 @@ package com.mymodels
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mymodels.ui.models.ModelsActivity
+import android.widget.Button
+import com.mymodels.ui.models.ModelActivity
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        startActivity(Intent(this, ModelsActivity::class.java))
-        finish()
+        val modelsButton = findViewById<Button>(R.id.modelsButton)
+
+        modelsButton.setOnClickListener {
+            val intent = Intent(this, ModelActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
