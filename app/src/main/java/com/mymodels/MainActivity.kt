@@ -13,8 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
        
-        NotificationHelper.createChannel(this)
-
         val modelsButton = findViewById<Button>(R.id.modelsButton)
 
         modelsButton.setOnClickListener {
