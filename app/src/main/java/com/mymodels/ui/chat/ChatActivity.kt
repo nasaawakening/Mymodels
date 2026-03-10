@@ -29,6 +29,20 @@ class ChatActivity : AppCompatActivity() {
         sessions.add(firstSession)
         currentSession = firstSession
       }
+       
+        newChatButton.setOnClickListener {
+
+        val newSession = ChatSession(
+        System.currentTimeMillis(),
+        mutableListOf()
+       )
+
+        sessions.add(newSession)
+
+        currentSession = newSession
+
+        chatList.adapter?.notifyDataSetChanged()
+       }
 
         chatList = findViewById(R.id.chatList)
         input = findViewById(R.id.input)
