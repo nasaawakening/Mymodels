@@ -98,7 +98,7 @@
                 android:layout_weight="1"
                 android:hint="Ask anything..."
                 android:textColor="#FFFFFF"
-                android:hintTextColor="#94A3B8"
+                android:textColorHint="#94A3B8"
                 android:background="#1E293B"
                 android:padding="12dp"/>
 
