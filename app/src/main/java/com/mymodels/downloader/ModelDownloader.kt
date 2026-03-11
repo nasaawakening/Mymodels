@@ -1,29 +1,93 @@
-package com.mymodels.downloader
+package com.mymodels.services
 
-import okhttp3.OkHttpClient
-import com.mymodels.utils.NotificationHelper
-import android.content.Context
-import okhttp3.Request
-import java.io.File
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
 
-class ModelDownloader(private val context: Context) {
+object ModelDownloader {
 
-    private val client=OkHttpClient()
+    private val activeDownloads = mutableMapOf<String, Boolean>()
 
-    fun download(url:String, file:File){
+    fun download(
+        url: String,
+        file: File,
+        onProgress: ((Int) -> Unit)? = null,
+        onComplete: (() -> Unit)? = null
+    ) {
 
-        val request=Request.Builder()
-            .url(url)
-            .build()
+        activeDownloads[url] = true
 
-        NotificationHelper.show(
-        context,
-        "Model berhasil didownload")
+        thread {
 
-        val response=client.newCall(request).execute()
+            try {
 
-        file.outputStream().use{
-            response.body!!.byteStream().copyTo(it)
+                val connection = URL(url).openConnection() as HttpURLConnection
+                connection.connect()
+
+                val totalSize = connection.contentLength
+
+                val input = connection.inputStream
+                val output = FileOutputStream(file)
+
+                val buffer = ByteArray(4096)
+
+                var downloaded = 0
+
+                while (true) {
+
+                    if (activeDownloads[url] == false) break
+
+                    val read = input.read(buffer)
+
+                    if (read == -1) break
+
+                    output.write(buffer, 0, read)
+
+                    downloaded += read
+
+                    if (totalSize > 0) {
+
+                        val progress = (downloaded * 100) / totalSize
+                        onProgress?.invoke(progress)
+
+                    }
+
+                }
+
+                input.close()
+                output.close()
+
+                if (activeDownloads[url] == true) {
+                    onComplete?.invoke()
+                }
+
+                activeDownloads.remove(url)
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+            }
+
         }
+
     }
+
+    fun cancel(url: String) {
+
+        activeDownloads[url] = false
+
+    }
+
+    fun getModelSize(url: String): Long {
+
+        val connection = URL(url).openConnection() as HttpURLConnection
+        connection.requestMethod = "HEAD"
+        connection.connect()
+
+        return connection.contentLengthLong
+
+    }
+
 }
