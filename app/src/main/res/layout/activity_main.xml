@@ -1,78 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#0F172A"
+    tools:context=".MainActivity">
 
-    <!-- CHAT LIST -->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/inputContainer"
-        android:padding="12dp"/>
-
-    <!-- EMPTY MODEL VIEW (hidden at start) -->
+    <!-- LOGIN UI -->
 
     <LinearLayout
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:id="@+id/loginLayout"
         android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_ai"/>
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
-            android:text="No model loaded"
+            android:text="MyModels AI"
+            android:textSize="26sp"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:layout_marginTop="10dp"/>
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnSelectModel"
-            android:text="Select Model"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"/>
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleSignInBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
-    <!-- INPUT BAR -->
+
+    <!-- CHAT UI -->
 
     <LinearLayout
-        android:id="@+id/inputContainer"
+        android:id="@+id/chatLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="#111111"
-        android:padding="8dp">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/inputMessage"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+
+        <!-- CHAT LIST -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:hint="Message MyModels..."
-            android:textColor="#FFFFFF"
-            android:textColorHint="#777777"
-            android:background="@android:color/transparent"/>
+            android:padding="8dp"/>
 
-        <ImageButton
-            android:id="@+id/btnSend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_send"
-            android:background="@android:color/transparent"/>
+
+        <!-- INPUT BAR -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/inputMessage"
+                android:hint="Ask anything..."
+                android:textColor="#FFFFFF"
+                android:hintTextColor="#94A3B8"
+                android:background="#1E293B"
+                android:padding="12dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:src="@drawable/ic_send"
+                android:background="@android:color/transparent"
+                android:layout_marginStart="8dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+
+    <!-- EMPTY MODEL SCREEN -->
+
+    <LinearLayout
+        android:id="@+id/emptyLayout"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@drawable/ic_ai"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+
+        <TextView
+            android:text="No AI Model Installed"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Download a model to start chatting"
+            android:textColor="#94A3B8"
+            android:layout_marginTop="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnDownloadModel"
+            android:text="Download Model"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>
