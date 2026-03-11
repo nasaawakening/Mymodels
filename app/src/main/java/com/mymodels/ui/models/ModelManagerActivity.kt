@@ -1,4 +1,4 @@
-package com.mymodels.ui.model
+package com.mymodels.ui.models
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
