@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var input: EditText
     private lateinit var send: ImageButton
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private lateinit var chatLayout: View
     private lateinit var emptyLayout: View
