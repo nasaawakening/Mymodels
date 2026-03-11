@@ -59,6 +59,20 @@ class MainActivity : AppCompatActivity() {
             )
 
         }
+        
+        val gso =          GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
+
+         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+         val signInButton =      findViewById<com.google.android.gms.common.SignInButton>(R.id.googl eSignInBtn)
+
+         signInButton.setOnClickListener {
+
+    signIn()
+
+       }
 
     }
 
@@ -121,6 +135,13 @@ class MainActivity : AppCompatActivity() {
             recycler.scrollToPosition(messages.size - 1)
 
         }, 1000)
+
+      private fun signIn() {
+
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, 1001)
+
+       }
 
     }
 
