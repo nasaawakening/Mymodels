@@ -32,6 +32,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        override fun onActivityResult(requestCode: Int, resultCode:     Int, data: Intent?) {
+
+           super.onActivityResult(requestCode, resultCode, data)
+
+           if (requestCode == 1001) {
+
+           val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+
+           try {
+
+            val account = task.getResult(ApiException::class.java)
+
+            val name = account.displayName
+            val email = account.email
+
+            Toast.makeText(this, "Welcome $name",  Toast.LENGTH_LONG).show()
+
+           } catch (e: ApiException) {
+
+            Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
+
+               }
+
+            }
+
+        }
+
         recycler = findViewById(R.id.chatRecycler)
         input = findViewById(R.id.inputMessage)
         send = findViewById(R.id.btnSend)
