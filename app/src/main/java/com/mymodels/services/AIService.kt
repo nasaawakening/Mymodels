@@ -2,10 +2,10 @@ package com.mymodels.services
 
 object AIService {
 
-    fun generate(prompt: String): String {
+    fun generate(userName: String, prompt: String): String {
 
         return """
-Hello Nasa 👋
+Hello $userName 👋
 
 You said:
 
@@ -22,5 +22,5 @@ Here is an example response with Markdown support.
 
 ```kotlin
 fun greet(){
-    println("Hello Nasa")
+    println("Hello $userName")
 }
