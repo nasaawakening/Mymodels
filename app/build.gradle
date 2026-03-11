@@ -4,58 +4,81 @@ plugins {
 }
 
 android {
-    namespace "com.mymodels"
+
+    namespace 'com.mymodels'
     compileSdk 34
 
     defaultConfig {
+
         applicationId "com.mymodels"
         minSdk 24
         targetSdk 34
+
         versionCode 1
         versionName "1.0"
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
 
-    splits {
-        abi {
-            enable true
-            reset()
-            include "armeabi-v7a", "arm64-v8a"
-            universalApk true
-        }
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-    
-    kotlin {
-    jvmToolchain(17)
-    }
-
-    buildFeatures {
-    viewBinding true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'
+            ), 'proguard-rules.pro'
         }
+
     }
+
+    compileOptions {
+
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+
+    }
+
+    kotlinOptions {
+
+        jvmTarget = '17'
+
+    }
+
 }
+
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
-    implementation 'com.google.code.gson:gson:2.10.1'
+    // Android Core
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Layout
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+
+    // Google Sign In
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    // Firebase Authentication
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // Firestore Database
+    implementation 'com.google.firebase:firebase-firestore:24.10.3'
+
+    // Glide (avatar loader)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    // Unit Test
+    testImplementation 'junit:junit:4.13.2'
+
+    // Android Test
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
+
+apply plugin: 'com.google.gms.google-services'
