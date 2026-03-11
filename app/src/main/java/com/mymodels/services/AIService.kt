@@ -1,4 +1,4 @@
-package com.mymodels.ai
+package com.mymodels.service
 
 import android.app.Service
 import android.content.Intent
