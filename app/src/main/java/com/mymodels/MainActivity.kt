@@ -231,6 +231,8 @@ class MainActivity : AppCompatActivity() {
 
         messages.add(typing)
 
+        ChatCloudService.saveMessage(userMessage)
+
         adapter.notifyItemInserted(messages.size - 1)
 
         recycler.scrollToPosition(messages.size - 1)
@@ -242,6 +244,8 @@ class MainActivity : AppCompatActivity() {
                 messages.remove(typing)
 
                 val aiMsg = ChatMessage("ai", response)
+
+                ChatCloudService.saveMessage(aiMessage)
 
                 messages.add(aiMsg)
 
