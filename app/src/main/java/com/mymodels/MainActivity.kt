@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.mymodels.cloud.ChatCloudService
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
 import com.mymodels.services.AIService
@@ -210,6 +211,10 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun loadAvatar(url: String?) {
+    // sementara kosong dulu
+   }
 
     private fun sendMessage() {
 
