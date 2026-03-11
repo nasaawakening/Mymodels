@@ -2,79 +2,99 @@ package com.mymodels
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.*
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
 import com.mymodels.services.AIService
 import com.mymodels.services.ChatRepository
+import com.mymodels.utils.ModelManager
 import com.mymodels.utils.ProfileLoader
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recycler: RecyclerView
     private lateinit var adapter: ChatAdapter
-    private lateinit var messageInput: EditText
-    private lateinit var sendBtn: ImageButton
-    private lateinit var googleSignInBtn: SignInButton
+    private lateinit var input: EditText
+    private lateinit var send: ImageButton
+
+    private lateinit var loginLayout: View
+    private lateinit var chatLayout: View
+    private lateinit var emptyLayout: View
+
     private lateinit var userName: TextView
     private lateinit var userAvatar: ImageView
 
-    private val messages = mutableListOf<ChatMessage>()
-
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private val RC_SIGN_IN = 1001
+    private val messages = mutableListOf<ChatMessage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        messageInput = findViewById(R.id.messageInput)
-        sendBtn = findViewById(R.id.sendBtn)
-        googleSignInBtn = findViewById(R.id.googleSignInBtn)
-        userName = findViewById(R.id.userName)
-        userAvatar = findViewById(R.id.userAvatar)
+        initViews()
 
-        adapter = ChatAdapter(messages)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        initRecycler()
 
         initGoogleLogin()
 
-        loadUser()
+        checkLogin()
 
-        loadChatHistory()
+    }
 
-        sendBtn.setOnClickListener {
+    private fun initViews() {
+
+        loginLayout = findViewById(R.id.loginLayout)
+        chatLayout = findViewById(R.id.chatLayout)
+        emptyLayout = findViewById(R.id.emptyLayout)
+
+        recycler = findViewById(R.id.chatRecycler)
+        input = findViewById(R.id.inputMessage)
+        send = findViewById(R.id.btnSend)
+
+        userName = findViewById(R.id.userName)
+        userAvatar = findViewById(R.id.userAvatar)
+
+        findViewById<com.google.android.gms.common.SignInButton>(R.id.googleSignInBtn)
+            .setOnClickListener { signIn() }
+
+        findViewById<Button>(R.id.btnDownloadModel)
+            .setOnClickListener {
+
+                startActivity(Intent(this, ModelManagerActivity::class.java))
+
+            }
+
+        send.setOnClickListener {
 
             sendMessage()
 
         }
 
-        googleSignInBtn.setOnClickListener {
+    }
 
-            signIn()
+    private fun initRecycler() {
 
-        }
+        adapter = ChatAdapter(messages)
+
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        recycler.adapter = adapter
 
     }
 
     private fun initGoogleLogin() {
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -84,9 +104,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun signIn() {
 
-        val signInIntent = googleSignInClient.signInIntent
+        val intent = googleSignInClient.signInIntent
 
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startActivityForResult(intent, 1001)
 
     }
 
@@ -94,19 +114,25 @@ class MainActivity : AppCompatActivity() {
 
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == 1001) {
 
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
 
             try {
 
-                val account = task.getResult(ApiException::class.java)
+                task.getResult(ApiException::class.java)
 
-                firebaseAuthWithGoogle(account.idToken!!)
+                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+
+                checkModel()
+
+                loadUser()
+
+                loadHistory()
 
             } catch (e: ApiException) {
 
-                Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -114,44 +140,61 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
+    private fun checkLogin() {
 
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val account = GoogleSignIn.getLastSignedInAccount(this)
 
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
+        if (account != null) {
 
-                if (task.isSuccessful) {
+            loginLayout.visibility = View.GONE
 
-                    Toast.makeText(this, "Login Success", Toast.LENGTH_LONG).show()
+            loadUser()
 
-                    loadUser()
+            checkModel()
 
-                } else {
+            loadHistory()
 
-                    Toast.makeText(this, "Auth Failed", Toast.LENGTH_LONG).show()
+        } else {
 
-                }
+            loginLayout.visibility = View.VISIBLE
 
-            }
+            chatLayout.visibility = View.GONE
+
+            emptyLayout.visibility = View.GONE
+
+        }
+
+    }
+
+    private fun checkModel() {
+
+        if (ModelManager.hasModel(this)) {
+
+            chatLayout.visibility = View.VISIBLE
+
+            emptyLayout.visibility = View.GONE
+
+        } else {
+
+            chatLayout.visibility = View.GONE
+
+            emptyLayout.visibility = View.VISIBLE
+
+        }
 
     }
 
     private fun loadUser() {
 
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = FirebaseAuth.getInstance().currentUser ?: return
 
-        if (user != null) {
+        userName.text = user.displayName
 
-            userName.text = user.displayName
-
-            ProfileLoader.loadAvatar(this, user.photoUrl.toString(), userAvatar)
-
-        }
+        ProfileLoader.loadAvatar(this, user.photoUrl.toString(), userAvatar)
 
     }
 
-    private fun loadChatHistory() {
+    private fun loadHistory() {
 
         ChatRepository.loadMessages {
 
@@ -161,7 +204,8 @@ class MainActivity : AppCompatActivity() {
 
             adapter.notifyDataSetChanged()
 
-            recyclerView.scrollToPosition(messages.size - 1)
+            if (messages.isNotEmpty())
+                recycler.scrollToPosition(messages.size - 1)
 
         }
 
@@ -169,31 +213,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendMessage() {
 
-        val text = messageInput.text.toString()
+        val text = input.text.toString()
 
         if (text.isEmpty()) return
 
-        val userMessage = ChatMessage("user", text)
+        val userMsg = ChatMessage("user", text)
 
-        messages.add(userMessage)
+        messages.add(userMsg)
 
         adapter.notifyItemInserted(messages.size - 1)
 
-        recyclerView.scrollToPosition(messages.size - 1)
+        recycler.scrollToPosition(messages.size - 1)
 
-        messageInput.setText("")
+        input.setText("")
+
+        val typing = ChatMessage("ai", "...")
+
+        messages.add(typing)
+
+        adapter.notifyItemInserted(messages.size - 1)
+
+        recycler.scrollToPosition(messages.size - 1)
 
         AIService.sendMessage(text) { response ->
 
             runOnUiThread {
 
-                val aiMessage = ChatMessage("ai", response)
+                messages.remove(typing)
 
-                messages.add(aiMessage)
+                val aiMsg = ChatMessage("ai", response)
 
-                adapter.notifyItemInserted(messages.size - 1)
+                messages.add(aiMsg)
 
-                recyclerView.scrollToPosition(messages.size - 1)
+                adapter.notifyDataSetChanged()
+
+                recycler.scrollToPosition(messages.size - 1)
 
             }
 
