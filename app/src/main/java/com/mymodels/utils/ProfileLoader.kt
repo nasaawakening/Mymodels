@@ -1,4 +1,4 @@
-package com.mymodels.profile
+package com.mymodels.utils
 
 import android.widget.ImageView
 import android.widget.TextView
