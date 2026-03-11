@@ -1,13 +1,45 @@
-package com.mymodels
+package com.mymodels.utils
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import com.mymodels.models.AIModel
+import java.io.File
 
-class ModelActivity : AppCompatActivity() {
+object ModelManager {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    var activeModel: String? = null
 
-        setContentView(R.layout.activity_model)
+    fun hasModel(context: Context): Boolean {
+
+        val dir = File(context.filesDir, "models")
+
+        return dir.exists() && dir.listFiles()?.isNotEmpty() == true
+
     }
+
+    fun getModels(context: Context): List<AIModel> {
+
+        val dir = File(context.filesDir, "models")
+
+        if (!dir.exists()) dir.mkdirs()
+
+        val models = mutableListOf<AIModel>()
+
+        dir.listFiles()?.forEach {
+
+            models.add(
+                AIModel(it.name, it.absolutePath)
+            )
+
+        }
+
+        return models
+
+    }
+
+    fun setActiveModel(name: String) {
+
+        activeModel = name
+
+    }
+
 }
