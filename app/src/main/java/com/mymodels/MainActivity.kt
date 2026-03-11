@@ -3,86 +3,122 @@ package com.mymodels
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mymodels.adapters.HistoryAdapter
+import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
 import com.mymodels.services.AIService
+import com.mymodels.utils.ModelManager
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var chatRecycler: RecyclerView
-    private lateinit var emptyView: LinearLayout
-    private lateinit var inputMessage: EditText
-    private lateinit var btnSend: ImageButton
-    private lateinit var adapter: HistoryAdapter
+    private lateinit var recycler: RecyclerView
+    private lateinit var input: EditText
+    private lateinit var send: ImageButton
+
+    private lateinit var chatLayout: View
+    private lateinit var emptyLayout: View
 
     private val messages = mutableListOf<ChatMessage>()
+    private lateinit var adapter: ChatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chatRecycler = findViewById(R.id.chatRecycler)
-        emptyView = findViewById(R.id.emptyView)
-        inputMessage = findViewById(R.id.inputMessage)
-        btnSend = findViewById(R.id.btnSend)
+        recycler = findViewById(R.id.chatRecycler)
+        input = findViewById(R.id.inputMessage)
+        send = findViewById(R.id.btnSend)
 
-        adapter = HistoryAdapter(messages)
+        chatLayout = findViewById(R.id.chatLayout)
+        emptyLayout = findViewById(R.id.emptyLayout)
 
-        chatRecycler.layoutManager = LinearLayoutManager(this)
-        chatRecycler.adapter = adapter
+        recycler.layoutManager = LinearLayoutManager(this)
 
-        checkModelStatus()
+        adapter = ChatAdapter(messages)
+        recycler.adapter = adapter
 
-        btnSend.setOnClickListener {
+        checkModel()
 
-            val text = inputMessage.text.toString()
+        send.setOnClickListener {
 
-            if (text.isNotEmpty()) {
-
-                val userMessage = ChatMessage(text, true)
-                messages.add(userMessage)
-                adapter.notifyItemInserted(messages.size - 1)
-
-                inputMessage.text.clear()
-
-                val aiReply = AIService.generateReply(text)
-
-                val aiMessage = ChatMessage(aiReply, false)
-                messages.add(aiMessage)
-                adapter.notifyItemInserted(messages.size - 1)
-
-                chatRecycler.scrollToPosition(messages.size - 1)
-            }
+            sendMessage()
 
         }
 
-        findViewById<View>(R.id.btnSelectModel).setOnClickListener {
-            startActivity(Intent(this, ModelActivity::class.java))
+        findViewById<Button>(R.id.btnDownloadModel).setOnClickListener {
+
+            startActivity(
+                Intent(this, ModelManagerActivity::class.java)
+            )
+
         }
+
     }
 
-    private fun checkModelStatus() {
+    private fun checkModel() {
 
-        val modelLoaded = false
+        if (ModelManager.hasModel(this)) {
 
-        if (modelLoaded) {
-
-            emptyView.visibility = View.GONE
-            chatRecycler.visibility = View.VISIBLE
+            chatLayout.visibility = View.VISIBLE
+            emptyLayout.visibility = View.GONE
 
         } else {
 
-            emptyView.visibility = View.VISIBLE
-            chatRecycler.visibility = View.GONE
+            chatLayout.visibility = View.GONE
+            emptyLayout.visibility = View.VISIBLE
 
         }
 
     }
+
+    private fun sendMessage() {
+
+        val text = input.text.toString()
+
+        if (text.isEmpty()) return
+
+        val userMessage = ChatMessage(text, true)
+
+        messages.add(userMessage)
+        adapter.notifyItemInserted(messages.size - 1)
+
+        recycler.scrollToPosition(messages.size - 1)
+
+        input.setText("")
+
+        aiReply(text)
+
+    }
+
+    private fun aiReply(prompt: String) {
+
+        val typing = ChatMessage("...", false)
+
+        messages.add(typing)
+        adapter.notifyItemInserted(messages.size - 1)
+
+        recycler.scrollToPosition(messages.size - 1)
+
+        recycler.postDelayed({
+
+            messages.remove(typing)
+
+            val reply = AIService.generate(prompt)
+
+            val aiMessage = ChatMessage(reply, false)
+
+            messages.add(aiMessage)
+
+            adapter.notifyDataSetChanged()
+
+            recycler.scrollToPosition(messages.size - 1)
+
+        }, 1000)
+
+    }
+
 }
