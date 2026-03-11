@@ -3,87 +3,34 @@ package com.mymodels.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.mymodels.R
-import com.mymodels.data.ChatSession
+import com.mymodels.models.ChatMessage
 
-class HistoryAdapter(
+class HistoryAdapter(private val messages: List<ChatMessage>) :
+    RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
-    private val sessions: MutableList<ChatSession>,
-    private val onChatSelected: (ChatSession) -> Unit
-
-) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        val title: TextView = view.findViewById(R.id.chatTitle)
-
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textMessage: TextView = itemView.findViewById(R.id.textMessage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat_history, parent, false)
+            .inflate(R.layout.item_chat, parent, false)
 
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-
-        return sessions.size
-
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val session = sessions[position]
+        val message = messages[position]
 
-        holder.title.text = session.title
-
-        // buka chat saat diklik
-        holder.itemView.setOnClickListener {
-
-            onChatSelected(session)
-
-        }
-
-        // rename chat saat ditekan lama
-        holder.itemView.setOnLongClickListener {
-
-            val context = holder.itemView.context
-            val editText = EditText(context)
-
-            editText.setText(session.title)
-
-            AlertDialog.Builder(context)
-                .setTitle("Rename Chat")
-                .setView(editText)
-                .setPositiveButton("OK") { _, _ ->
-
-                    session.title = editText.text.toString()
-
-                    notifyItemChanged(position)
-
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
-
-            true
-        }
-
+        holder.textMessage.text = message.text
     }
 
-    // update list untuk fitur search
-    fun updateList(newList: List<ChatSession>) {
-
-        sessions.clear()
-
-        sessions.addAll(newList)
-
-        notifyDataSetChanged()
-
+    override fun getItemCount(): Int {
+        return messages.size
     }
 }
