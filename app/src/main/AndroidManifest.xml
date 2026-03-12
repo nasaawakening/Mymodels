@@ -1,4 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mymodels">
 
     <!-- INTERNET -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,29 +14,29 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <!-- Storage support Android 7-12 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
-    <!-- notification -->
+
+    <!-- Notifications -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="false"
         android:label="MyModels"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyModels">
 
-        <!-- Main launcher -->
+        <!-- Splash Screen (Launcher) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
-
-       <activity android:name=".ui.auth.LoginActivity" />
-
-       <activity android:name=".SplashActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -41,6 +44,16 @@
             </intent-filter>
 
         </activity>
+
+        <!-- Login -->
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false"/>
+
+        <!-- Main -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
 
         <!-- Chat AI -->
         <activity
@@ -51,8 +64,8 @@
         <activity
             android:name=".ModelsActivity"
             android:exported="false"/>
-         
-        <!-- Service AI -->
+
+        <!-- AI Background Service -->
         <service
             android:name=".ai.AIService"
             android:exported="false"
