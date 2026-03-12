@@ -1,13 +1,9 @@
-name: MyModels Android Release
+name: MyModels Final Signed Release
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
-
-permissions:
-  contents: write   # 🔥 WAJIB untuk tag & release
 
 env:
   APP_NAME: MyModels
@@ -18,24 +14,25 @@ jobs:
 
     steps:
 
+      # 📥 Ambil source
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
+      # ☕ Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK
+      # 🤖 Android SDK
+      - name: Setup Android
         uses: android-actions/setup-android@v3
 
       - name: Grant Gradle Permission
         run: chmod +x gradlew
 
-      # 🔥 AUTO VERSION
+      # 🔢 AUTO VERSION
       - name: Generate Version
         run: |
           VERSION_CODE=${{ github.run_number }}
@@ -44,44 +41,47 @@ jobs:
           echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
-      # 🔥 UPDATE build.gradle VERSION
-      - name: Update version in Gradle
+      # 📝 Update version di Gradle
+      - name: Update version
         run: |
           sed -i "s/versionCode .*/versionCode $VERSION_CODE/" app/build.gradle
           sed -i "s/versionName .*/versionName \"$VERSION_NAME\"/" app/build.gradle
 
+      # 🔐 Decode keystore
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mymodels.jks
 
-       - name: Build Signed APK
-         run: ./gradlew assembleRelease
-           env:
-    KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-    KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-    KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      # 🏗️ Build SIGNED APK
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 📦 BUILD AAB
-      - name: Build AAB
-        run: ./gradlew bundleRelease
-
-      # 📦 UNIVERSAL COPY
-      - name: Collect APKs
+      # 📦 Rename jadi mymodels.apk
+      - name: Rename APK
         run: |
-          mkdir release
-          cp app/build/outputs/apk/release/*.apk release/
-          cp app/build/outputs/bundle/release/*.aab release/
+          cp app/build/outputs/apk/release/*.apk mymodels.apk
 
-      # 📝 AUTO CHANGELOG
+      # 🏷️ Tag otomatis
+      - name: Create Tag
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email actions@github.com
+          git tag v${VERSION_NAME}
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} v${VERSION_NAME}
+
+      # 📝 Changelog
       - name: Generate Changelog
-        run: |
-          git log -10 --pretty=format:"- %s" > CHANGELOG.txt
+        run: git log -10 --pretty=format:"- %s" > CHANGELOG.txt
 
-      # 🚀 CREATE RELEASE + TAG + UPLOAD
-      - name: Create GitHub Release
+      # 🚀 Release + upload APK
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION_NAME }}
           name: MyModels v${{ env.VERSION_NAME }}
           body_path: CHANGELOG.txt
-          files: release/*
+          files: mymodels.apk
