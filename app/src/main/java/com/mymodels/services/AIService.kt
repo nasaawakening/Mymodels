@@ -1,5 +1,7 @@
 package com.mymodels.services
 
+import com.google.firebase.auth.FirebaseAuth
+
 object AIService {
 
     fun generate(userName: String, prompt: String): String {
@@ -9,18 +11,11 @@ Hello $userName 👋
 
 You said:
 
-**$prompt**
+$prompt
 
-Here is an example response with Markdown support.
+How can I help you today?
+""".trimIndent()
 
-### Example List
-- Item 1
-- Item 2
-- Item 3
+    }
 
-### Example Code
-
-```kotlin
-fun greet(){
-    println("Hello $userName")
 }
