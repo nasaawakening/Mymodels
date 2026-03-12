@@ -5,29 +5,23 @@ import java.io.File
 
 object ModelManager {
 
-    private const val MODEL_FILE = "model.bin"
+    private fun modelDir(context: Context): File {
+        val dir = File(context.filesDir, "models")
+        if (!dir.exists()) dir.mkdirs()
+        return dir
+    }
 
     fun hasModel(context: Context): Boolean {
-
-        val file = File(context.filesDir, MODEL_FILE)
-
-        return file.exists()
+        return modelDir(context).listFiles()?.isNotEmpty() == true
     }
 
-    fun downloadModel(context: Context) {
-
-        val file = File(context.filesDir, MODEL_FILE)
-
-        file.writeText("dummy model")
-
+    fun downloadModel(context: Context, name: String) {
+        val file = File(modelDir(context), "$name.model")
+        file.writeText("dummy ai model")
     }
 
-    fun deleteModel(context: Context) {
-
-        val file = File(context.filesDir, MODEL_FILE)
-
+    fun deleteModel(context: Context, name: String) {
+        val file = File(modelDir(context), "$name.model")
         if (file.exists()) file.delete()
-
     }
-
 }
