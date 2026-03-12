@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
 import com.mymodels.services.AIService
@@ -82,16 +83,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnDownloadModel)
             .setOnClickListener {
-
                 startActivity(Intent(this, ModelManagerActivity::class.java))
-
             }
 
-        send.setOnClickListener {
-
-            sendMessage()
-
-        }
+        send.setOnClickListener { sendMessage() }
     }
 
     private fun initRecycler() {
@@ -106,6 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun initGoogleLogin() {
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -119,15 +115,11 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
 
                 R.id.nav_models -> {
-
                     startActivity(Intent(this, ModelManagerActivity::class.java))
-
                 }
 
                 R.id.nav_train_model -> {
-
                     startActivity(Intent(this, TrainModelActivity::class.java))
-
                 }
 
                 R.id.nav_logout -> {
@@ -163,30 +155,48 @@ class MainActivity : AppCompatActivity() {
 
             try {
 
-                task.getResult(ApiException::class.java)
+                val account = task.getResult(ApiException::class.java)
 
-                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+                firebaseAuthWithGoogle(account.idToken!!)
 
-                loginLayout.visibility = View.GONE
+            } catch (e: Exception) {
 
-                loadUser()
-
-                checkModel()
-
-                loadHistory()
-
-            } catch (e: ApiException) {
-
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Login gagal", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun firebaseAuthWithGoogle(idToken: String) {
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener {
+
+                if (it.isSuccessful) {
+
+                    Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
+
+                    loginLayout.visibility = View.GONE
+
+                    loadUser()
+
+                    checkModel()
+
+                    loadHistory()
+
+                } else {
+
+                    Toast.makeText(this, "Firebase login gagal", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
     private fun checkLogin() {
 
-        val account = GoogleSignIn.getLastSignedInAccount(this)
+        val user = FirebaseAuth.getInstance().currentUser
 
-        if (account != null) {
+        if (user != null) {
 
             loginLayout.visibility = View.GONE
 
@@ -231,7 +241,6 @@ class MainActivity : AppCompatActivity() {
             val name = alias ?: user.displayName ?: "User"
 
             runOnUiThread {
-
                 userName.text = name
             }
         }
@@ -275,14 +284,6 @@ class MainActivity : AppCompatActivity() {
 
         input.setText("")
 
-        val typing = ChatMessage("...", false)
-
-        messages.add(typing)
-
-        adapter.notifyItemInserted(messages.size - 1)
-
-        recycler.scrollToPosition(messages.size - 1)
-
         Thread {
 
             val name = userName.text.toString()
@@ -291,15 +292,13 @@ class MainActivity : AppCompatActivity() {
 
             runOnUiThread {
 
-                messages.remove(typing)
-
                 val aiMsg = ChatMessage(response, false)
 
                 messages.add(aiMsg)
 
                 ChatCloudService.saveMessage(aiMsg)
 
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemInserted(messages.size - 1)
 
                 recycler.scrollToPosition(messages.size - 1)
             }
