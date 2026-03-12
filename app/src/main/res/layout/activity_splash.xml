@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_ai_neural"
+    android:gravity="center">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/logo_mymodels"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+
+        <TextView
+            android:text="MyModels"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:text="Loading AI Engine..."
+            android:textColor="#A5B4FC"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
