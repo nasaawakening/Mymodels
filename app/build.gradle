@@ -33,6 +33,7 @@ android {
     }
 
     buildFeatures {
+         viewbinding true
          dataBinding true
     }
 
