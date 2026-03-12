@@ -49,14 +49,14 @@
             <EditText
                 android:hint="Email"
                 android:textColor="#FFFFFF"
-                android:hintTextColor="#94A3B8"
+                android:textColorHint="#94A3B8"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
 
             <EditText
                 android:hint="Password"
                 android:textColor="#FFFFFF"
-                android:hintTextColor="#94A3B8"
+                android:textColorHint="#94A3B8"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
