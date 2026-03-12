@@ -36,6 +36,8 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true">
+           
+        <activity android:name=".ui.auth.LoginActivity"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
