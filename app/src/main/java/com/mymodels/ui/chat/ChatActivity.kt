@@ -55,6 +55,19 @@ class ChatActivity : AppCompatActivity() {
 
                 chatList.scrollToPosition(messages.size - 1)
             }
+             
+                ProfileService.getAlias { alias ->
+
+                val googleName =
+                com.google.firebase.auth.FirebaseAuth.getInstance()
+                .currentUser?.displayName ?: "User"
+
+                val name = alias ?: googleName
+
+                val response =
+                AIService.generate(name, prompt)
+
+            }
         }
     }
 }
