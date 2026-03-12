@@ -28,8 +28,19 @@ android {
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'
             ), 'proguard-rules.pro'
+            signingConfig signingConfig.release
+            shrinkResources false
         }
 
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("mymodels.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
     }
 
     buildFeatures {
