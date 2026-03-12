@@ -17,7 +17,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
 
     private lateinit var loginEmailButton: Button
-    private lateinit var loginMicrosoftButton: Button
     private lateinit var loginGithubButton: Button
     private lateinit var guestButton: Button
 
@@ -32,16 +31,11 @@ class LoginActivity : AppCompatActivity() {
         passwordInput = findViewById(R.id.passwordInput)
 
         loginEmailButton = findViewById(R.id.btnLoginEmail)
-        loginMicrosoftButton = findViewById(R.id.btnLoginMicrosoft)
         loginGithubButton = findViewById(R.id.btnLoginGithub)
         guestButton = findViewById(R.id.btnGuest)
 
         loginEmailButton.setOnClickListener {
             loginWithEmail()
-        }
-
-        loginMicrosoftButton.setOnClickListener {
-            loginWithMicrosoft()
         }
 
         loginGithubButton.setOnClickListener {
@@ -89,24 +83,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnFailureListener {
 
                 Toast.makeText(this, "Login GitHub gagal", Toast.LENGTH_SHORT).show()
-
-            }
-    }
-
-    private fun loginWithMicrosoft() {
-
-        val provider = OAuthProvider.newBuilder("microsoft.com")
-
-        auth.startActivityForSignInWithProvider(this, provider.build())
-            .addOnSuccessListener {
-
-                Toast.makeText(this, "Login Microsoft berhasil", Toast.LENGTH_SHORT).show()
-                openMain()
-
-            }
-            .addOnFailureListener {
-
-                Toast.makeText(this, "Login Microsoft gagal", Toast.LENGTH_SHORT).show()
 
             }
     }
