@@ -47,6 +47,13 @@ class LoginActivity : AppCompatActivity() {
             loginGuest()
         }
 
+        val subtitle = findViewById<TextView>(R.id.subtitle)
+
+            typeText(
+            subtitle,
+           "Running AI models locally..."
+        )
+
         fun typeText(textView: TextView, text: String, delay: Long = 40) {
 
             var index = 0
