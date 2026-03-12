@@ -6,12 +6,14 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write   # 🔥 WAJIB untuk tag & release
+
 env:
   APP_NAME: MyModels
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,9 +35,8 @@ jobs:
       - name: Grant Gradle Permission
         run: chmod +x gradlew
 
-      # AUTO VERSION
+      # 🔥 AUTO VERSION
       - name: Generate Version
-        id: version
         run: |
           VERSION_CODE=${{ github.run_number }}
           VERSION_NAME="1.0.$VERSION_CODE"
@@ -43,49 +44,37 @@ jobs:
           echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
-      # UPDATE build.gradle VERSION
+      # 🔥 UPDATE build.gradle VERSION
       - name: Update version in Gradle
         run: |
           sed -i "s/versionCode .*/versionCode $VERSION_CODE/" app/build.gradle
           sed -i "s/versionName .*/versionName \"$VERSION_NAME\"/" app/build.gradle
 
-      # BUILD APK
+      # 📦 BUILD APK
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      # BUILD AAB
+      # 📦 BUILD AAB
       - name: Build AAB
         run: ./gradlew bundleRelease
 
-      # CREATE UNIVERSAL APK
-      - name: Build Universal APK
+      # 📦 UNIVERSAL COPY
+      - name: Collect APKs
         run: |
-          mkdir universal
-          cp app/build/outputs/apk/release/*.apk universal/
+          mkdir release
+          cp app/build/outputs/apk/release/*.apk release/
+          cp app/build/outputs/bundle/release/*.aab release/
 
-      # AUTO CHANGELOG
+      # 📝 AUTO CHANGELOG
       - name: Generate Changelog
-        id: changelog
         run: |
           git log -10 --pretty=format:"- %s" > CHANGELOG.txt
 
-      # CREATE TAG
-      - name: Create and push tag
-        run: |
-          git config --global user.name github-actions
-          git config --global user.email actions@github.com
-
-          git tag -f v${VERSION_NAME}
-
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/nasaawakening/Mymodels.git v${VERSION_NAME} --force
-
-      # CREATE RELEASE
-      - name: Create Release
+      # 🚀 CREATE RELEASE + TAG + UPLOAD
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION_NAME }}
           name: MyModels v${{ env.VERSION_NAME }}
           body_path: CHANGELOG.txt
-          files: |
-            app/build/outputs/apk/release/*.apk
-            app/build/outputs/bundle/release/*.aab
+          files: release/*
