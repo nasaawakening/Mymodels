@@ -24,12 +24,6 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/btnLoginMicrosoft"
-        android:text="Login dengan Microsoft"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
         android:id="@+id/btnLoginGithub"
         android:text="Login dengan GitHub"
         android:layout_width="match_parent"
