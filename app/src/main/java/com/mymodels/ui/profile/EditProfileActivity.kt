@@ -14,16 +14,17 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        val aliasInput = findViewById<EditText>(R.id.aliasInput)
-        val saveBtn = findViewById<Button>(R.id.saveAliasBtn)
+        val input = findViewById<EditText>(R.id.aliasInput)
+        val save = findViewById<Button>(R.id.saveAliasBtn)
 
-        saveBtn.setOnClickListener {
+        save.setOnClickListener {
 
-            val alias = aliasInput.text.toString()
+            val alias = input.text.toString()
 
             ProfileService.saveAlias(alias)
 
             finish()
+
         }
 
     }
