@@ -62,6 +62,12 @@
                 android:layout_marginTop="20dp"
                 android:backgroundTint="#2563EB"
                 android:textColor="#FFFFFF"/>
+             
+            <!-- neural network -->
+
+            <com.mymodels.ui.NeuralBackgroundView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <!-- GitHub button -->
 
