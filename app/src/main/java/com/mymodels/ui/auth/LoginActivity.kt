@@ -15,10 +15,9 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
-
-    private lateinit var loginEmailButton: Button
-    private lateinit var loginGithubButton: Button
-    private lateinit var guestButton: Button
+    private lateinit var btnEmailLogin: Button
+    private lateinit var btnGithubLogin: LinearLayout
+    private lateinit var btnGuest: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -30,30 +29,42 @@ class LoginActivity : AppCompatActivity() {
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
 
-        loginEmailButton = findViewById(R.id.btnLoginEmail)
-        loginGithubButton = findViewById(R.id.btnLoginGithub)
-        guestButton = findViewById(R.id.btnGuest)
+        btnEmailLogin = findViewById(R.id.btnLoginEmail)
+        btnGithubLogin = findViewById(R.id.btnLoginGithub)
+        btnGuest = findViewById(R.id.btnGuest)
 
-        loginEmailButton.setOnClickListener {
-            loginWithEmail()
+        checkLoginSession()
+
+        btnEmailLogin.setOnClickListener {
+            loginEmail()
         }
 
-        loginGithubButton.setOnClickListener {
-            loginWithGithub()
+        btnGithubLogin.setOnClickListener {
+            loginGithub()
         }
 
-        guestButton.setOnClickListener {
-            loginAsGuest()
+        btnGuest.setOnClickListener {
+            loginGuest()
         }
     }
 
-    private fun loginWithEmail() {
+    private fun checkLoginSession() {
 
-        val email = emailInput.text.toString()
-        val password = passwordInput.text.toString()
+        val user = auth.currentUser
+
+        if (user != null) {
+            openMain()
+        }
+    }
+
+    private fun loginEmail() {
+
+        val email = emailInput.text.toString().trim()
+        val password = passwordInput.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email atau password kosong", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "Email dan password wajib diisi", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -61,43 +72,67 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener {
 
                 if (it.isSuccessful) {
+
+                    Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
                     openMain()
+
                 } else {
+
                     Toast.makeText(this, "Login gagal", Toast.LENGTH_SHORT).show()
                 }
-
             }
     }
 
-    private fun loginWithGithub() {
+    private fun loginGithub() {
 
         val provider = OAuthProvider.newBuilder("github.com")
 
-        auth.startActivityForSignInWithProvider(this, provider.build())
-            .addOnSuccessListener {
+        val pendingResult = auth.pendingAuthResult
 
-                Toast.makeText(this, "Login GitHub berhasil", Toast.LENGTH_SHORT).show()
-                openMain()
+        if (pendingResult != null) {
 
-            }
-            .addOnFailureListener {
+            pendingResult
+                .addOnSuccessListener {
+                    openMain()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "GitHub login gagal", Toast.LENGTH_SHORT).show()
+                }
 
-                Toast.makeText(this, "Login GitHub gagal", Toast.LENGTH_SHORT).show()
+        } else {
 
-            }
+            auth.startActivityForSignInWithProvider(this, provider.build())
+                .addOnSuccessListener {
+                    openMain()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "GitHub login gagal", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
-    private fun loginAsGuest() {
+    private fun loginGuest() {
 
-        Toast.makeText(this, "Masuk sebagai Guest", Toast.LENGTH_SHORT).show()
-        openMain()
+        auth.signInAnonymously()
+            .addOnCompleteListener {
 
+                if (it.isSuccessful) {
+
+                    Toast.makeText(this, "Guest mode aktif", Toast.LENGTH_SHORT).show()
+                    openMain()
+
+                } else {
+
+                    Toast.makeText(this, "Guest login gagal", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun openMain() {
 
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        val intent = Intent(this, MainActivity::class.java)
 
+        startActivity(intent)
+        finish()
     }
 }
