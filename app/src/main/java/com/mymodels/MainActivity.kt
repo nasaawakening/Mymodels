@@ -137,6 +137,19 @@ class MainActivity : AppCompatActivity() {
 
             }
 
+            ProfileService.getAlias { alias ->
+
+              val googleName =
+                com.google.firebase.auth.FirebaseAuth.getInstance()
+                .currentUser?.displayName ?: "User"
+
+               val name = alias ?: googleName
+
+               val response =
+                 AIService.generate(name, prompt)
+
+           }
+
         }
 
     }
