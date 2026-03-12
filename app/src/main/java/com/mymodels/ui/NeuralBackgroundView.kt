@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import kotlin.random.Random
@@ -15,111 +13,59 @@ class NeuralBackgroundView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : View(context, attrs) {
 
-    private val nodePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val paintNode = Paint().apply {
         color = Color.parseColor("#60A5FA")
-        style = Paint.Style.FILL
+        isAntiAlias = true
     }
 
-    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val paintLine = Paint().apply {
         color = Color.parseColor("#2563EB")
         strokeWidth = 2f
+        isAntiAlias = true
     }
 
-    private val nodes = mutableListOf<Node>()
+    private val nodes = mutableListOf<Pair<Float, Float>>()
 
-    private val handler = Handler(Looper.getMainLooper())
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
 
-    private val updateRunnable = object : Runnable {
-        override fun run() {
-            updateNodes()
-            invalidate()
-            handler.postDelayed(this, 30)
-        }
-    }
+        nodes.clear()
 
-    data class Node(
-        var x: Float,
-        var y: Float,
-        var dx: Float,
-        var dy: Float
-    )
+        if (w == 0 || h == 0) return
 
-    init {
-        createNodes()
-        handler.post(updateRunnable)
-    }
-
-    private fun createNodes() {
-
-        if (nodes.isNotEmpty()) return
-
-        for (i in 0 until 25) {
-
+        repeat(20) {
             nodes.add(
-                Node(
-                    Random.nextFloat() * 1000,
-                    Random.nextFloat() * 1800,
-                    Random.nextFloat() * 2 - 1,
-                    Random.nextFloat() * 2 - 1
+                Pair(
+                    Random.nextFloat() * w,
+                    Random.nextFloat() * h
                 )
             )
         }
     }
 
-    private fun updateNodes() {
-
-        val w = width
-        val h = height
-
-        if (w == 0 || h == 0) return
-
-        for (node in nodes) {
-
-            node.x += node.dx
-            node.y += node.dy
-
-            if (node.x < 0 || node.x > w) node.dx *= -1
-            if (node.y < 0 || node.y > h) node.dy *= -1
-        }
-    }
-
     override fun onDraw(canvas: Canvas) {
-
         super.onDraw(canvas)
 
         if (nodes.isEmpty()) return
 
         for (i in nodes.indices) {
 
-            val n1 = nodes[i]
+            val (x1, y1) = nodes[i]
 
-            canvas.drawCircle(n1.x, n1.y, 5f, nodePaint)
+            canvas.drawCircle(x1, y1, 6f, paintNode)
 
             for (j in i + 1 until nodes.size) {
 
-                val n2 = nodes[j]
+                val (x2, y2) = nodes[j]
 
-                val dx = n1.x - n2.x
-                val dy = n1.y - n2.y
-
+                val dx = x1 - x2
+                val dy = y1 - y2
                 val distance = Math.sqrt((dx * dx + dy * dy).toDouble())
 
                 if (distance < 200) {
-
-                    canvas.drawLine(
-                        n1.x,
-                        n1.y,
-                        n2.x,
-                        n2.y,
-                        linePaint
-                    )
+                    canvas.drawLine(x1, y1, x2, y2, paintLine)
                 }
             }
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        handler.removeCallbacks(updateRunnable)
     }
 }
