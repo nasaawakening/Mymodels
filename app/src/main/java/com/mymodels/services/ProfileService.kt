@@ -2,39 +2,28 @@ package com.mymodels.services
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mymodels.models.UserProfile
 
 object ProfileService {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    fun getAlias(callback: (String?) -> Unit) {
 
-    fun saveAlias(alias: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+            ?: return callback(null)
 
-        val uid = auth.currentUser?.uid ?: return
-
-        val data = mapOf(
-            "alias" to alias
-        )
-
-        db.collection("users")
-            .document(uid)
-            .set(data, com.google.firebase.firestore.SetOptions.merge())
-
-    }
-
-    fun getProfile(callback: (UserProfile?) -> Unit) {
-
-        val uid = auth.currentUser?.uid ?: return
-
-        db.collection("users")
+        FirebaseFirestore.getInstance()
+            .collection("users")
             .document(uid)
             .get()
             .addOnSuccessListener {
 
-                val profile = it.toObject(UserProfile::class.java)
+                val alias = it.getString("alias")
 
-                callback(profile)
+                callback(alias)
+
+            }
+            .addOnFailureListener {
+
+                callback(null)
 
             }
 
