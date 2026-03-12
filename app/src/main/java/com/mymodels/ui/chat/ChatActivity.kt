@@ -38,15 +38,15 @@ class ChatActivity : AppCompatActivity() {
             if (text.isNotEmpty()) {
 
                 val userMessage = ChatMessage(
-                    text = text,
-                    role = "user"
+                    text = prompt,
+                    isUser = true
                 )
 
                 adapter.addMessage(userMessage)
 
                 val aiMessage = ChatMessage(
-                    text = "AI: $text",
-                    role = "assistant"
+                    text = aiResponse,
+                    isUser = false
                 )
 
                 adapter.addMessage(aiMessage)
