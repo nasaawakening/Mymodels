@@ -1,38 +1,131 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_ai_gradient_anim">
 
-    <EditText
-        android:id="@+id/emailInput"
-        android:hint="Email"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/passwordInput"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/btnLoginEmail"
-        android:text="Login dengan Email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <!-- Logo -->
 
-    <Button
-        android:id="@+id/btnLoginGithub"
-        android:text="Login dengan GitHub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@drawable/logo_mymodels"
+                android:layout_marginTop="60dp"/>
 
-    <Button
-        android:id="@+id/btnGuest"
-        android:text="Guest Mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <!-- App name -->
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MyModels"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Run AI Models on your phone"
+                android:textColor="#CBD5F5"
+                android:layout_marginBottom="40dp"/>
+
+            <!-- Login Card -->
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Email -->
+
+                    <EditText
+                        android:id="@+id/emailInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Password -->
+
+                    <EditText
+                        android:id="@+id/passwordInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:layout_marginBottom="24dp"/>
+
+                    <!-- Email login -->
+
+                    <Button
+                        android:id="@+id/btnLoginEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Login with Email"
+                        android:backgroundTint="#2563EB"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginBottom="12dp"/>
+
+                    <!-- GitHub login -->
+
+                    <LinearLayout
+                        android:id="@+id/btnLoginGithub"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="#0F172A"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_github"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:text="Login with GitHub"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
+                    <!-- Guest -->
+
+                    <Button
+                        android:id="@+id/btnGuest"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Continue as Guest"
+                        android:backgroundTint="#475569"
+                        android:textColor="#FFFFFF"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
