@@ -1,26 +1,28 @@
 package com.mymodels.services
 
-import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 
 object HuggingFaceService {
 
     private val client = OkHttpClient()
 
-    fun uploadModel(token: String, repo: String, fileContent: String) {
+    fun query(prompt: String): String {
 
         val body = RequestBody.create(
             "application/json".toMediaTypeOrNull(),
-            fileContent
+            """{"inputs":"$prompt"}"""
         )
 
         val request = Request.Builder()
-            .url("https://huggingface.co/api/repos/create")
-            .addHeader("Authorization", "Bearer $token")
+            .url("https://api-inference.huggingface.co/models/gpt2")
             .post(body)
             .build()
 
-        client.newCall(request).execute()
+        val response = client.newCall(request).execute()
 
+        return response.body?.string() ?: ""
     }
-
 }
