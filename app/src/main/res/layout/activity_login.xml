@@ -5,7 +5,9 @@
 
     <!-- Neural animated background -->
 
-    
+    <com.mymodels.ui.NeuralBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <!-- Main container -->
 
