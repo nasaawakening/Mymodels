@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.mymodels.services.AIService
 import com.mymodels.services.ProfileService
 import com.mymodels.cloud.ChatCloudService
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
-import com.mymodels.services.AIService
 import com.mymodels.services.ChatRepository
 import com.mymodels.utils.ModelManager
 import com.mymodels.utils.ProfileLoader
