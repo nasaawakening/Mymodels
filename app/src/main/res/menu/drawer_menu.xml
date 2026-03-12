@@ -1,15 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-<item
-android:id="@+id/menu_models"
-android:title="Models"/>
+    <item
+        android:id="@+id/nav_chat"
+        android:title="Chat"/>
 
-<item
-android:id="@+id/menu_downloads"
-android:title="Downloads"/>
+    <item
+        android:id="@+id/nav_models"
+        android:title="Models"/>
 
-<item
-android:id="@+id/menu_settings"
-android:title="Settings"/>
+    <item
+        android:id="@+id/nav_train_model"
+        android:title="Train Model 🔥"/>
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile"/>
 
 </menu>
