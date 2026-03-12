@@ -6,5 +6,8 @@
 <string name="settings">Pengaturan</string>
 <string name="language">Bahasa</string>
 <string name="search_models">Cari models</string>
+<string name="default_web_client_id">
+YOUR_FIREBASE_CLIENT_ID
+</string>
 
 </resources>
