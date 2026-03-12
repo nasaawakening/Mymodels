@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- gradient background -->
+
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#020617"
+                android:endColor="#1E3A8A"
+                android:angle="135"/>
+        </shape>
+    </item>
+
+    <!-- neural dots -->
+
+    <item>
+        <bitmap
+            android:src="@drawable/neural_pattern"
+            android:gravity="center"/>
+    </item>
+
+</layer-list>
