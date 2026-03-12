@@ -2,6 +2,8 @@ package com.mymodels.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +35,10 @@ class LoginActivity : AppCompatActivity() {
         btnGithubLogin = findViewById(R.id.btnLoginGithub)
         btnGuest = findViewById(R.id.btnGuest)
 
+        val subtitle = findViewById<TextView>(R.id.subtitle)
+
+        typeText(subtitle, "Running AI models locally...")
+
         checkLoginSession()
 
         btnEmailLogin.setOnClickListener {
@@ -46,38 +52,30 @@ class LoginActivity : AppCompatActivity() {
         btnGuest.setOnClickListener {
             loginGuest()
         }
-
-        val subtitle = findViewById<TextView>(R.id.subtitle)
-
-            typeText(
-            subtitle,
-           "Running AI models locally..."
-        )
-
-        fun typeText(textView: TextView, text: String, delay: Long = 40) {
-
-            var index = 0
-
-            textView.text = ""
-
-            val handler = android.os.Handler()
-
-            val runnable = object : Runnable {
-            override fun run() {
-
-            if (index < text.length) {
-
-                textView.append(text[index].toString())
-                index++
-
-                handler.postDelayed(this, delay)
-            }
-        }
     }
 
-             handler.post(runnable)
+    private fun typeText(textView: TextView, text: String, delay: Long = 40) {
+
+        var index = 0
+        textView.text = ""
+
+        val handler = Handler(Looper.getMainLooper())
+
+        val runnable = object : Runnable {
+
+            override fun run() {
+
+                if (index < text.length) {
+
+                    textView.append(text[index].toString())
+                    index++
+
+                    handler.postDelayed(this, delay)
+                }
+            }
         }
 
+        handler.post(runnable)
     }
 
     private fun checkLoginSession() {
@@ -163,7 +161,6 @@ class LoginActivity : AppCompatActivity() {
     private fun openMain() {
 
         val intent = Intent(this, MainActivity::class.java)
-
         startActivity(intent)
         finish()
     }
