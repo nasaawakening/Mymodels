@@ -1,21 +1,17 @@
 package com.mymodels.services
 
-import com.google.firebase.auth.FirebaseAuth
-
 object AIService {
 
-    fun generate(userName: String, prompt: String): String {
+    fun sendMessage(prompt: String, callback: (String) -> Unit) {
 
-        return """
-Hello $userName 👋
+        val response = """
+Hello 👋
 
 You said:
-
 $prompt
+"""
 
-How can I help you today?
-""".trimIndent()
-
+        callback(response)
     }
 
 }
