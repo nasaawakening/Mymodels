@@ -1,21 +1,60 @@
 package com.mymodels.services
 
-import com.google.firebase.auth.FirebaseAuth
-
 object AIService {
 
-    fun generate(userName: String, prompt: String): String {
+    fun generate(name: String, prompt: String, model: String): String {
+
+        return when(model) {
+
+            "phi" -> phiModel(name, prompt)
+
+            "mistral" -> mistralModel(name, prompt)
+
+            "llama" -> llamaModel(name, prompt)
+
+            else -> "Model not found"
+
+        }
+
+    }
+
+    private fun phiModel(name: String, prompt: String): String {
 
         return """
-Hello $userName 👋
+Hello $name 👋
 
-You said:
+You asked:
 
 $prompt
 
-How can I help you today?
-""".trimIndent()
+This response is from **Phi Model**
+"""
+    }
 
+    private fun mistralModel(name: String, prompt: String): String {
+
+        return """
+Hello $name 👋
+
+You asked:
+
+$prompt
+
+This response is from **Mistral Model**
+"""
+    }
+
+    private fun llamaModel(name: String, prompt: String): String {
+
+        return """
+Hello $name 👋
+
+You asked:
+
+$prompt
+
+This response is from **Llama Model**
+"""
     }
 
 }
