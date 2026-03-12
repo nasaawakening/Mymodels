@@ -46,6 +46,31 @@ class LoginActivity : AppCompatActivity() {
         btnGuest.setOnClickListener {
             loginGuest()
         }
+
+        fun typeText(textView: TextView, text: String, delay: Long = 40) {
+
+            var index = 0
+
+            textView.text = ""
+
+            val handler = android.os.Handler()
+
+            val runnable = object : Runnable {
+            override fun run() {
+
+            if (index < text.length) {
+
+                textView.append(text[index].toString())
+                index++
+
+                handler.postDelayed(this, delay)
+            }
+        }
+    }
+
+             handler.post(runnable)
+        }
+
     }
 
     private fun checkLoginSession() {
