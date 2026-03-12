@@ -2,6 +2,7 @@ package com.mymodels.services
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mymodels.models.UserProfile
 
 object ProfileService {
 
@@ -19,9 +20,10 @@ object ProfileService {
         db.collection("users")
             .document(uid)
             .set(data, com.google.firebase.firestore.SetOptions.merge())
+
     }
 
-    fun getAlias(callback: (String?) -> Unit) {
+    fun getProfile(callback: (UserProfile?) -> Unit) {
 
         val uid = auth.currentUser?.uid ?: return
 
@@ -30,10 +32,12 @@ object ProfileService {
             .get()
             .addOnSuccessListener {
 
-                val alias = it.getString("alias")
+                val profile = it.toObject(UserProfile::class.java)
 
-                callback(alias)
+                callback(profile)
 
             }
+
     }
+
 }
