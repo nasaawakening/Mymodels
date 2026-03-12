@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
@@ -19,6 +21,7 @@ import com.mymodels.services.ChatRepository
 import com.mymodels.utils.ModelManager
 import com.mymodels.utils.ProfileLoader
 import com.mymodels.ui.models.ModelManagerActivity
+import com.mymodels.ui.models.TrainModelActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+
     private val messages = mutableListOf<ChatMessage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         initRecycler()
 
         initGoogleLogin()
+
+        initSidebar()
 
         checkLogin()
     }
@@ -65,6 +73,9 @@ class MainActivity : AppCompatActivity() {
 
         userName = findViewById(R.id.userName)
         userAvatar = findViewById(R.id.userAvatar)
+
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navView = findViewById(R.id.navView)
 
         findViewById<com.google.android.gms.common.SignInButton>(R.id.googleSignInBtn)
             .setOnClickListener { signIn() }
@@ -99,6 +110,40 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    private fun initSidebar() {
+
+        navView.setNavigationItemSelectedListener { item ->
+
+            when (item.itemId) {
+
+                R.id.nav_models -> {
+
+                    startActivity(Intent(this, ModelManagerActivity::class.java))
+
+                }
+
+                R.id.nav_train_model -> {
+
+                    startActivity(Intent(this, TrainModelActivity::class.java))
+
+                }
+
+                R.id.nav_logout -> {
+
+                    FirebaseAuth.getInstance().signOut()
+
+                    googleSignInClient.signOut()
+
+                    recreate()
+                }
+            }
+
+            drawerLayout.closeDrawers()
+
+            true
+        }
     }
 
     private fun signIn() {
