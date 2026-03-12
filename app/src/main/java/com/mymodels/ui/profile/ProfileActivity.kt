@@ -12,29 +12,34 @@ import com.mymodels.utils.ProfileLoader
 
 class ProfileActivity : AppCompatActivity() {
 
+    private lateinit var avatar: ImageView
+    private lateinit var name: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        val avatar = findViewById<ImageView>(R.id.avatar)
-        val name = findViewById<TextView>(R.id.name)
+        avatar = findViewById(R.id.avatar)
+        name = findViewById(R.id.name)
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        ProfileLoader.loadAvatar(avatar, user?.photoUrl.toString())
+        val photoUrl = user?.photoUrl?.toString()
 
-        ProfileService.getProfile {
+        ProfileLoader.loadAvatar(avatar, photoUrl)
 
-            val alias = it?.alias
+        ProfileService.getProfile { alias ->
 
-            val displayName = if (alias.isNullOrEmpty())
-                user?.displayName
-            else
-                alias
+            val googleName = user?.displayName ?: "User"
+
+            val displayName =
+                if (alias.isNullOrEmpty())
+                    googleName
+                else
+                    alias
 
             name.text = displayName
-
         }
 
         avatar.setOnClickListener {
@@ -42,9 +47,6 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(
                 Intent(this, EditProfileActivity::class.java)
             )
-
         }
-
     }
-
 }
