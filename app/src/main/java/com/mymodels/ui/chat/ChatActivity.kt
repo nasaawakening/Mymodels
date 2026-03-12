@@ -6,8 +6,11 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.mymodels.R
 import com.mymodels.models.ChatMessage
+import com.mymodels.services.AIService
+import com.mymodels.services.ProfileService
 
 class ChatActivity : AppCompatActivity() {
 
@@ -33,9 +36,9 @@ class ChatActivity : AppCompatActivity() {
 
         sendButton.setOnClickListener {
 
-            val text = input.text.toString()
+            val prompt = input.text.toString()
 
-            if (text.isNotEmpty()) {
+            if (prompt.isNotEmpty()) {
 
                 val userMessage = ChatMessage(
                     text = prompt,
@@ -44,29 +47,32 @@ class ChatActivity : AppCompatActivity() {
 
                 adapter.addMessage(userMessage)
 
-                val aiMessage = ChatMessage(
-                    text = aiResponse,
-                    isUser = false
-                )
-
-                adapter.addMessage(aiMessage)
-
                 input.text.clear()
 
                 chatList.scrollToPosition(messages.size - 1)
-            }
-             
+
                 ProfileService.getAlias { alias ->
 
-                val googleName =
-                com.google.firebase.auth.FirebaseAuth.getInstance()
-                .currentUser?.displayName ?: "User"
+                    val googleName =
+                        FirebaseAuth.getInstance().currentUser?.displayName ?: "User"
 
-                val name = alias ?: googleName
+                    val name = alias ?: googleName
 
-                val response =
-                AIService.generate(name, prompt)
+                    val aiResponse = AIService.generate(name, prompt)
 
+                    val aiMessage = ChatMessage(
+                        text = aiResponse,
+                        isUser = false
+                    )
+
+                    runOnUiThread {
+
+                        adapter.addMessage(aiMessage)
+
+                        chatList.scrollToPosition(messages.size - 1)
+
+                    }
+                }
             }
         }
     }
