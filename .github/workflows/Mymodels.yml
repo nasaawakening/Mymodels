@@ -14,7 +14,7 @@ jobs:
 
     steps:
 
-      # 📥 Ambil source
+      # 📥 Source
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -60,11 +60,17 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 📦 Rename jadi mymodels.apk
-      - name: Rename APK
+      # 📦 Cari APK (Universal → fallback biasa)
+      - name: Find APK
         run: |
-          APK=$(ls app/build/outputs/apk/release/*universal*.apk | head -n 1)
-    cp "$APK" mymodels.apk
+          APK=$(find app/build -name "*universal*.apk" | head -n 1)
+
+          if [ -z "$APK" ]; then
+            APK=$(find app/build -name "*release*.apk" | head -n 1)
+          fi
+
+          echo "Found APK: $APK"
+          cp "$APK" mymodels.apk
 
       # 🏷️ Tag otomatis
       - name: Create Tag
