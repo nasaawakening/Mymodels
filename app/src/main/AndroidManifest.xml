@@ -30,7 +30,8 @@
         android:icon="@drawable/ic_launcher"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyModels">
+        android:theme="@style/Theme.MyModels"
+        android:name=".MyApp">
 
         <!-- Splash Screen (Launcher) -->
         <activity
