@@ -2,7 +2,6 @@ package com.mymodels
 
 import android.app.DownloadManager
 import android.content.*
-import android.content.Intent
 import android.net.Uri
 import android.os.*
 import android.view.View
@@ -26,24 +25,18 @@ import okhttp3.Request
 import org.json.JSONObject
 import java.io.File
 
-import com.mymodels.BuildConfig
 import com.mymodels.update.UpdateChannel
 import com.mymodels.adapters.ChatAdapter
 import com.mymodels.models.ChatMessage
-
 import com.mymodels.services.*
 import com.mymodels.cloud.ChatCloudService
 import com.mymodels.utils.*
-
 import com.mymodels.ui.models.ModelManagerActivity
 import com.mymodels.ui.models.TrainModelActivity
-
-// ====== KODE DIPERSINGKAT HEADER IMPORT SAMA ======
 
 class MainActivity : AppCompatActivity() {
 
     // ===== UI =====
-
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: ChatAdapter
     private lateinit var input: EditText
@@ -58,7 +51,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
-
     private lateinit var googleSignInClient: GoogleSignInClient
 
     private val messages = mutableListOf<ChatMessage>()
@@ -70,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        handlePreviousCrash() // 💥 OTA jika crash
+        handlePreviousCrash()
 
         setContentView(R.layout.activity_main)
 
@@ -83,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 💥 CRASH DETECTOR
+    // 💥 CRASH DETECTOR → SAFE MODE
     // =========================================================
 
     private fun handlePreviousCrash() {
@@ -93,41 +85,59 @@ class MainActivity : AppCompatActivity() {
 
         if (crashed) {
 
-        Toast.makeText(
-               this,
-              "Safe Mode — memperbaiki aplikasi...",
-               Toast.LENGTH_LONG
-           ).show()
+            Toast.makeText(
+                this,
+                "Safe Mode — memperbaiki aplikasi...",
+                Toast.LENGTH_LONG
+            ).show()
 
-           launchRepairMode()
+            launchRepairMode()
 
-          prefs.edit().putBoolean("crashed", false).apply()
-       }
+            prefs.edit().putBoolean("crashed", false).apply()
+        }
     }
 
     // =========================================================
-    // 🏗️ REPAIR MODE
+    // 🏗️ SELF-HEALING REPAIR MODE
     // =========================================================
 
     private fun launchRepairMode() {
 
-          Thread {
+        Thread {
 
-           clearCorruptedCache()
-           repairData()
-           restartServices()
+            clearCorruptedCache()
+            repairData()
 
-           runOnUiThread {
-             Toast.makeText(
-                 this,
-                 "Perbaikan selesai",
-                  Toast.LENGTH_LONG
-             ).show()
-         }
+            runOnUiThread {
+                Toast.makeText(
+                    this,
+                    "Perbaikan selesai",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
 
-      }.start()
-   }
+        }.start()
+    }
 
+    // =========================================================
+    // 📁 CLEAR CACHE
+    // =========================================================
+
+    private fun clearCorruptedCache() {
+        cacheDir.deleteRecursively()
+        cacheDir.mkdirs()
+    }
+
+    // =========================================================
+    // 👨‍🔧 REPAIR DATA
+    // =========================================================
+
+    private fun repairData() {
+
+        filesDir.listFiles()?.forEach { file ->
+            if (file.length() == 0L) file.delete()
+        }
+    }
 
     // =========================================================
     // 💎 CHANNEL USER
@@ -146,69 +156,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 🌐 URL OTA
-    // =========================================================
-
-    private fun getUpdateUrl(channel: UpdateChannel): String {
-
-        return when (channel) {
-
-            UpdateChannel.STABLE ->
-                "https://api.github.com/repos/nasaawakening/Mymodels/releases/latest"
-
-            UpdateChannel.BETA ->
-                "https://api.github.com/repos/nasaawakening/Mymodels/releases/tags/beta"
-
-            UpdateChannel.NIGHTLY ->
-                "https://api.github.com/repos/nasaawakening/Mymodels/releases/tags/nightly"
-        }
-    }
-
-    // =========================================================
     // 📡 CHECK OTA
     // =========================================================
 
     private fun checkForUpdate() {
 
-    Thread {
+        Thread {
 
-        try {
+            try {
 
-            val client = OkHttpClient()
+                val client = OkHttpClient()
 
-            val request = Request.Builder()
-                .url("https://api.github.com/repos/nasaawakening/Mymodels/releases/latest")
-                .build()
+                val request = Request.Builder()
+                    .url("https://api.github.com/repos/nasaawakening/Mymodels/releases/latest")
+                    .build()
 
-            val response = client.newCall(request).execute()
+                val response = client.newCall(request).execute()
 
-            val json = JSONObject(response.body?.string() ?: return@Thread)
+                val json = JSONObject(response.body?.string() ?: return@Thread)
 
-            val latest = json.getString("tag_name")
+                val latest = json.getString("tag_name")
 
-            if (latest != BuildConfig.VERSION_NAME) {
+                if (latest != BuildConfig.VERSION_NAME) {
 
-                val assets = json.getJSONArray("assets")
+                    val assets = json.getJSONArray("assets")
 
-                if (assets.length() > 0) {
+                    if (assets.length() > 0) {
 
-                    val apkUrl = assets
-                        .getJSONObject(0)
-                        .getString("browser_download_url")
+                        val apkUrl = assets
+                            .getJSONObject(0)
+                            .getString("browser_download_url")
 
-                    runOnUiThread { downloadApk(apkUrl) }
+                        runOnUiThread { downloadApk(apkUrl) }
+                    }
                 }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }.start()
-}
+        }.start()
+    }
 
     // =========================================================
-    // 📥 DOWNLOAD
+    // 📥 DOWNLOAD UPDATE
     // =========================================================
 
     private fun downloadApk(url: String) {
@@ -232,7 +223,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 🔄 INSTALL
+    // 🔄 INSTALL APK
     // =========================================================
 
     private fun installApk() {
@@ -334,7 +325,7 @@ class MainActivity : AppCompatActivity() {
 
                 firebaseAuthWithGoogle(account.idToken!!)
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 toast("Login gagal")
             }
         }
@@ -471,51 +462,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // =================
-    // 📁 CLEAR CACHE
-    // =================
-
-    private fun clearCorruptedCache() {
-
-        cacheDir.deleteRecursively()
-        cacheDir.mkdirs()
-    }
-
-    // ================
-    // 👨‍🔧 REPAIR DATA
-    // ================
-  
-    private fun repairData() {
-
-         filesDir.listFiles()?.forEach { file ->
-         if (file.length() == 0L) file.delete()
-       }
-    }
-
-    // ==================
-    // 🛠️ RESTART SERVICE
-    // ==================
-
-    private fun launchRepairMode() {
-
-        Thread {
-
-           clearCorruptedCache()
-           repairData()
-
-              runOnUiThread {
-              Toast.makeText(
-                    this,
-                   "Perbaikan selesai",
-                    Toast.LENGTH_LONG
-               ).show()
-           }
-
-        }.start()
-    }
-
     // =========================================================
-    // 💬 SEND
+    // 💬 SEND MESSAGE
     // =========================================================
 
     private fun sendMessage() {
