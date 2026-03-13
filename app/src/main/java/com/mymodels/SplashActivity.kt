@@ -2,39 +2,42 @@ package com.mymodels
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.mymodels.ui.auth.LoginActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
-    private val SPLASH_TIME: Long = 2000 // 2 detik
+    private val SPLASH_TIME = 2000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
+        setContentView(R.layout.activity_splash)
 
-            // jika ada layout splash
-            setContentView(R.layout.activity_splash)
+        lifecycleScope.launch {
 
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        Handler(Looper.getMainLooper()).postDelayed({
+            delay(SPLASH_TIME)
 
             try {
 
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
+                val user = FirebaseAuth.getInstance().currentUser
+
+                val next = if (user != null) {
+                    MainActivity::class.java
+                } else {
+                    LoginActivity::class.java
+                }
+
+                startActivity(Intent(this@SplashActivity, next))
                 finish()
 
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-        }, SPLASH_TIME)
+        }
     }
 }
