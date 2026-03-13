@@ -63,7 +63,8 @@ jobs:
       # 📦 Rename jadi mymodels.apk
       - name: Rename APK
         run: |
-          cp app/build/outputs/apk/release/*.apk mymodels.apk
+          APK=$(ls app/build/outputs/apk/release/*universal*.apk | head -n 1)
+    cp "$APK" mymodels.apk
 
       # 🏷️ Tag otomatis
       - name: Create Tag
