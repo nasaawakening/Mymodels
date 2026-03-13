@@ -1,16 +1,14 @@
-<style name="Theme.MyModels" parent="Theme.Material3.DynamicColors.DayNight">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
 
-    <item name="android:statusBarColor">@android:color/transparent</item>
+    <style name="Theme.MyModels" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 
-</style>
+    <style name="Theme.MyModels.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ic_launcher_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyModels</item>
+    </style>
 
-<style name="Theme.MyModels.Splash"
-    parent="Theme.SplashScreen">
-
-    <item name="windowSplashScreenBackground">@color/ic_launcher_bg</item>
-
-    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-
-    <item name="postSplashScreenTheme">@style/Theme.MyModels</item>
-
-</style>
+</resources>
