@@ -496,11 +496,22 @@ class MainActivity : AppCompatActivity() {
     // 🛠️ RESTART SERVICE
     // ==================
 
-    private fun restartServices() {
+    private fun launchRepairMode() {
 
-        try {
-             AIService.initialize(this)
-        } catch (_: Exception) {}
+        Thread {
+
+           clearCorruptedCache()
+           repairData()
+
+              runOnUiThread {
+              Toast.makeText(
+                    this,
+                   "Perbaikan selesai",
+                    Toast.LENGTH_LONG
+               ).show()
+           }
+
+        }.start()
     }
 
     // =========================================================
