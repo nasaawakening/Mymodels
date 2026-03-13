@@ -38,15 +38,16 @@ android {
         release {
 
             // 💎 PLAY STORE OPTIMIZED
-            minifyEnabled true
-            shrinkResources true
+                 minifyEnabled true
+                 shrinkResources true
 
-            proguardFiles
-                    getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
+                proguardFiles(
+           getDefaultProguardFile('proguard-android-optimize.txt'),
+        'proguard-rules.pro'
+       )
 
-            signingConfig signingConfigs.release
-        }
+         signingConfig signingConfigs.release
+    }
 
         debug {
             applicationIdSuffix ".debug"
