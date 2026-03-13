@@ -37,6 +37,8 @@ import com.mymodels.utils.*
 import com.mymodels.ui.models.ModelManagerActivity
 import com.mymodels.ui.models.TrainModelActivity
 
+// ====== KODE DIPERSINGKAT HEADER IMPORT SAMA ======
+
 class MainActivity : AppCompatActivity() {
 
     // ===== UI =====
@@ -67,8 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 💥 Jika crash sebelumnya → cek update otomatis
-        handlePreviousCrash()
+        handlePreviousCrash() // 💥 OTA jika crash
 
         setContentView(R.layout.activity_main)
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 💥 DETEKSI CRASH SEBELUMNYA
+    // 💥 CRASH DETECTOR
     // =========================================================
 
     private fun handlePreviousCrash() {
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
             Toast.makeText(
                 this,
-                "Aplikasi crash sebelumnya — mencari update...",
+                "Crash terdeteksi — cek update...",
                 Toast.LENGTH_LONG
             ).show()
 
@@ -104,7 +105,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 📡 CEK UPDATE DARI GITHUB RELEASE
+    // 💎 CHANNEL USER
+    // =========================================================
+
+    private fun getUserChannel(): UpdateChannel {
+
+        val prefs = getSharedPreferences("app", MODE_PRIVATE)
+
+        val saved = prefs.getString(
+            "channel",
+            UpdateChannel.STABLE.name
+        )
+
+        return UpdateChannel.valueOf(saved!!)
+    }
+
+    // =========================================================
+    // 🌐 URL OTA
+    // =========================================================
+
+    private fun getUpdateUrl(channel: UpdateChannel): String {
+
+        return when (channel) {
+
+            UpdateChannel.STABLE ->
+                "https://api.github.com/repos/nasaawakening/Mymodels/releases/latest"
+
+            UpdateChannel.BETA ->
+                "https://api.github.com/repos/nasaawakening/Mymodels/releases/tags/beta"
+
+            UpdateChannel.NIGHTLY ->
+                "https://api.github.com/repos/nasaawakening/Mymodels/releases/tags/nightly"
+        }
+    }
+
+    // =========================================================
+    // 📡 CHECK OTA
     // =========================================================
 
     private fun checkForUpdate() {
@@ -113,20 +149,19 @@ class MainActivity : AppCompatActivity() {
 
             try {
 
-                val client = OkHttpClient()
+                val url = getUpdateUrl(getUserChannel())
 
-                val request = Request.Builder()
-                    .url("https://api.github.com/repos/nasaawakening/Mymodels/releases/latest")
-                    .build()
+                val request = Request.Builder().url(url).build()
 
-                val response = client.newCall(request).execute()
+                val response = OkHttpClient()
+                    .newCall(request)
+                    .execute()
 
-                val body = response.body?.string() ?: return@Thread
-                val json = JSONObject(body)
+                val json = JSONObject(response.body?.string() ?: return@Thread)
 
-                val latestVersion = json.getString("tag_name")
+                val latest = json.getString("tag_name")
 
-                if (latestVersion != BuildConfig.VERSION_NAME) {
+                if (latest != BuildConfig.VERSION_NAME) {
 
                     val assets = json.getJSONArray("assets")
 
@@ -148,7 +183,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 📥 DOWNLOAD APK UPDATE
+    // 📥 DOWNLOAD
     // =========================================================
 
     private fun downloadApk(url: String) {
@@ -172,7 +207,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 🔄 INSTALL APK
+    // 🔄 INSTALL
     // =========================================================
 
     private fun installApk() {
@@ -188,7 +223,7 @@ class MainActivity : AppCompatActivity() {
 
         val uri = FileProvider.getUriForFile(
             this,
-            packageName + ".provider",
+            "$packageName.provider",
             file
         )
 
@@ -219,8 +254,9 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.navView)
 
-        findViewById<com.google.android.gms.common.SignInButton>(R.id.googleSignInBtn)
-            .setOnClickListener { signIn() }
+        findViewById<com.google.android.gms.common.SignInButton>(
+            R.id.googleSignInBtn
+        ).setOnClickListener { signIn() }
 
         findViewById<Button>(R.id.btnDownloadModel)
             .setOnClickListener {
@@ -265,11 +301,12 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == 1001) {
 
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-
             try {
 
-                val account = task.getResult(ApiException::class.java)
+                val account = GoogleSignIn
+                    .getSignedInAccountFromIntent(data)
+                    .getResult(ApiException::class.java)
+
                 firebaseAuthWithGoogle(account.idToken!!)
 
             } catch (e: Exception) {
@@ -296,9 +333,7 @@ class MainActivity : AppCompatActivity() {
                     checkModel()
                     loadHistory()
 
-                } else {
-                    toast("Firebase login gagal")
-                }
+                } else toast("Firebase login gagal")
             }
     }
 
@@ -412,7 +447,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
-    // 💬 SEND MESSAGE
+    // 💬 SEND
     // =========================================================
 
     private fun sendMessage() {
@@ -432,8 +467,10 @@ class MainActivity : AppCompatActivity() {
 
         Thread {
 
-            val name = userName.text.toString()
-            val response = AIService.generate(name, text)
+            val response = AIService.generate(
+                userName.text.toString(),
+                text
+            )
 
             runOnUiThread {
 
@@ -448,10 +485,6 @@ class MainActivity : AppCompatActivity() {
 
         }.start()
     }
-
-    // =========================================================
-    // 🔧 UTILS
-    // =========================================================
 
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
