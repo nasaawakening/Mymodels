@@ -25,13 +25,13 @@ android {
 
     // 🔐 SIGNING CONFIG (CI/CD READY)
     signingConfigs {
-        release {
-            storeFile file("mymodels.jks")
-            storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
-            keyAlias System.getenv("KEY_ALIAS") ?: ""
-            keyPassword System.getenv("KEY_PASSWORD") ?: ""
-        }
+    release {
+        storeFile file("${rootProject.projectDir}/mymodels.jks")
+        storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
+        keyAlias System.getenv("KEY_ALIAS") ?: ""
+        keyPassword System.getenv("KEY_PASSWORD") ?: ""
     }
+}
 
     buildTypes {
 
