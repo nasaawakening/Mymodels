@@ -92,16 +92,16 @@ class MainActivity : AppCompatActivity() {
 
         if (crashed) {
 
-            Toast.makeText(
-                this,
-                "Crash terdeteksi — cek update...",
-                Toast.LENGTH_LONG
-            ).show()
+        Toast.makeText(
+               this,
+              "Safe Mode — memperbaiki aplikasi...",
+               Toast.LENGTH_LONG
+           ).show()
 
-            checkForUpdate()
+           launchRepairMode()
 
-            prefs.edit().putBoolean("crashed", false).apply()
-        }
+          prefs.edit().putBoolean("crashed", false).apply()
+       }
     }
 
     // =========================================================
