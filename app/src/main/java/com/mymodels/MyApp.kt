@@ -19,5 +19,8 @@ class MyApp : Application() {
 
             android.os.Process.killProcess(android.os.Process.myPid())
         }
+       
+       DynamicColors.applyToActivitiesIfAvailable(this)
+
     }
 }
