@@ -19,33 +19,38 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
-    // 🔐 SIGNING CONFIG (HARUS DI ATAS)
+    // 🔐 SIGNING CONFIG (CI/CD READY)
     signingConfigs {
         release {
-            storeFile file("../mymodels.jks")
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias System.getenv("KEY_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD")
+            storeFile file("mymodels.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias System.getenv("KEY_ALIAS") ?: ""
+            keyPassword System.getenv("KEY_PASSWORD") ?: ""
         }
     }
 
     buildTypes {
 
         release {
-            minifyEnabled false
-            shrinkResources false
 
-            proguardFiles getDefaultProguardFile(
-                    'proguard-android-optimize.txt'
-            ), 'proguard-rules.pro'
+            // 💎 PLAY STORE OPTIMIZED
+            minifyEnabled true
+            shrinkResources true
+
+            proguardFiles
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
 
             signingConfig signingConfigs.release
         }
 
         debug {
-            // optional
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
         }
     }
 
@@ -73,11 +78,23 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+
+    packagingOptions {
+        resources {
+            excludes += [
+                    "META-INF/DEPENDENCIES",
+                    "META-INF/LICENSE",
+                    "META-INF/LICENSE.txt",
+                    "META-INF/NOTICE",
+                    "META-INF/NOTICE.txt"
+            ]
+        }
+    }
 }
 
 dependencies {
 
-    // Firebase BOM (HARUS DI ATAS)
+    // 🔥 Firebase BOM
     implementation platform('com.google.firebase:firebase-bom:33.1.2')
 
     // Android Core
@@ -112,5 +129,3 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
-
-apply plugin: 'com.google.gms.google-services'
