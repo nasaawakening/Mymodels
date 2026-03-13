@@ -145,42 +145,42 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkForUpdate() {
 
-        Thread {
+    Thread {
 
-            try {
+        try {
 
-                val url = getUpdateUrl(getUserChannel())
+            val client = OkHttpClient()
 
-                val request = Request.Builder().url(url).build()
+            val request = Request.Builder()
+                .url("https://api.github.com/repos/nasaawakening/Mymodels/releases/latest")
+                .build()
 
-                val response = OkHttpClient()
-                    .newCall(request)
-                    .execute()
+            val response = client.newCall(request).execute()
 
-                val json = JSONObject(response.body?.string() ?: return@Thread)
+            val json = JSONObject(response.body?.string() ?: return@Thread)
 
-                val latest = json.getString("tag_name")
+            val latest = json.getString("tag_name")
 
-                if (latest != BuildConfig.VERSION_NAME) {
+            if (latest != BuildConfig.VERSION_NAME) {
 
-                    val assets = json.getJSONArray("assets")
+                val assets = json.getJSONArray("assets")
 
-                    if (assets.length() > 0) {
+                if (assets.length() > 0) {
 
-                        val apkUrl = assets
-                            .getJSONObject(0)
-                            .getString("browser_download_url")
+                    val apkUrl = assets
+                        .getJSONObject(0)
+                        .getString("browser_download_url")
 
-                        runOnUiThread { downloadApk(apkUrl) }
-                    }
+                    runOnUiThread { downloadApk(apkUrl) }
                 }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
 
-        }.start()
-    }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }.start()
+}
 
     // =========================================================
     // 📥 DOWNLOAD
