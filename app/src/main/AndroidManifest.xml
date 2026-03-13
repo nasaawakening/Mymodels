@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- INTERNET -->
+    <!-- 🌐 Internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <!-- Download models -->
+    <!-- 📥 Background downloads -->
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
 
-    <!-- Run long AI inference -->
+    <!-- ⚡ Foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
-    <!-- Storage support Android 7-12 -->
+    <!-- 📂 Storage (legacy support) -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
@@ -21,58 +20,56 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
 
-    <!-- Notifications -->
+    <!-- 🔔 Notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
+        android:name=".MyApp"
         android:allowBackup="false"
         android:label="Mymodels"
-        android:icon="@drawable/ic_launcher"
-        android:roundIcon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyModels"
-        android:name=".MyApp">
+        android:usesCleartextTraffic="true">
 
-        <!-- Splash Screen (Launcher) -->
+        <!-- 🚀 Splash Screen -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
 
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
-
             </intent-filter>
 
         </activity>
 
-        <!-- Login -->
+        <!-- 🔐 Login -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"/>
 
-        <!-- Main -->
+        <!-- 🏠 Main -->
         <activity
             android:name=".MainActivity"
             android:exported="false"/>
 
-        <!-- Chat AI -->
+        <!-- 💬 Chat AI -->
         <activity
             android:name=".ChatActivity"
             android:exported="false"/>
 
-        <!-- Model Manager -->
+        <!-- 📦 Model Manager -->
         <activity
             android:name=".ModelsActivity"
             android:exported="false"/>
 
-        <!-- AI Background Service -->
+        <!-- 🤖 AI Background Service -->
         <service
             android:name=".ai.AIService"
             android:exported="false"
-            android:foregroundServiceType="dataSync"/>
+            android:foregroundServiceType="dataSync|mediaProcessing"/>
 
     </application>
 
