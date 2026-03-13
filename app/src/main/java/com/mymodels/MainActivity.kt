@@ -105,6 +105,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     // =========================================================
+    // 🏗️ REPAIR MODE
+    // =========================================================
+
+    private fun launchRepairMode() {
+
+          Thread {
+
+           clearCorruptedCache()
+           repairData()
+           restartServices()
+
+           runOnUiThread {
+             Toast.makeText(
+                 this,
+                 "Perbaikan selesai",
+                  Toast.LENGTH_LONG
+             ).show()
+         }
+
+      }.start()
+   }
+
+
+    // =========================================================
     // 💎 CHANNEL USER
     // =========================================================
 
@@ -444,6 +468,38 @@ class MainActivity : AppCompatActivity() {
                     recycler.scrollToPosition(messages.size - 1)
             }
         }
+    }
+
+    // =================
+    // 📁 CLEAR CACHE
+    // =================
+
+    private fun clearCorruptedCache() {
+
+        cacheDir.deleteRecursively()
+        cacheDir.mkdirs()
+    }
+
+    // ================
+    // 👨‍🔧 REPAIR DATA
+    // ================
+  
+    private fun repairData() {
+
+         filesDir.listFiles()?.forEach { file ->
+         if (file.length() == 0L) file.delete()
+       }
+    }
+
+    // ==================
+    // 🛠️ RESTART SERVICE
+    // ==================
+
+    private fun restartServices() {
+
+        try {
+             AIService.initialize(this)
+        } catch (_: Exception) {}
     }
 
     // =========================================================
