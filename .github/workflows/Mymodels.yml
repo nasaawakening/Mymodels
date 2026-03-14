@@ -1,4 +1,4 @@
-name: MyModels Final Signed Release
+name: MyModels Final Signed Release + Website
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
 
     steps:
 
-      # 📥 Source
+      # 📥 Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -44,7 +44,7 @@ jobs:
           echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
-      # 📝 Update version di Gradle
+      # 📝 Update version
       - name: Update version
         run: |
           sed -i "s/versionCode .*/versionCode $VERSION_CODE/" app/build.gradle
@@ -63,7 +63,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 📦 Cari APK (Universal → fallback biasa)
+      # 📦 Find APK
       - name: Find APK
         run: |
           APK=$(find app/build -name "*universal*.apk" | head -n 1)
@@ -75,7 +75,31 @@ jobs:
           echo "Found APK: $APK"
           cp "$APK" mymodels.apk
 
-      # 🏷️ Tag otomatis
+      # 🌐 COPY KE WEBSITE (folder releases)
+      - name: Copy APK to releases folder
+        run: |
+          mkdir -p releases
+          cp mymodels.apk releases/MyModels.apk
+
+      # 📝 Update version.json untuk OTA + website
+      - name: Create version.json
+        run: |
+          mkdir -p releases
+          echo '{
+            "version": "'${VERSION_NAME}'",
+            "apk": "releases/MyModels.apk"
+          }' > releases/version.json
+
+      # 💾 Commit APK + version.json ke repo
+      - name: Commit APK to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add releases/MyModels.apk releases/version.json || true
+          git commit -m "Auto update APK v${VERSION_NAME}" || true
+          git push
+
+      # 🏷️ Create Tag
       - name: Create Tag
         run: |
           git config --global user.name github-actions
@@ -87,7 +111,7 @@ jobs:
       - name: Generate Changelog
         run: git log -10 --pretty=format:"- %s" > CHANGELOG.txt
 
-      # 🚀 Release + upload APK
+      # 🚀 GitHub Release
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
