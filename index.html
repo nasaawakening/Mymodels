@@ -1,142 +1,270 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MyModels Distribution</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>MyModels | Dashboard</title>
+    <style>
+        :root {
+            --color-canvas-default: #0d1117;
+            --color-canvas-overlay: #161b22;
+            --color-border-default: #30363d;
+            --color-accent-fg: #58a6ff;
+            --color-success-fg: #3fb950;
+            --color-btn-bg: #21262d;
+            --color-btn-hover: #30363d;
+            --sidebar-width: 260px;
+        }
 
-<style>
-body{margin:0;font-family:system-ui;background:#0d1117;color:#c9d1d9}
-header{background:#161b22;padding:14px 20px;border-bottom:1px solid #30363d}
-.container{display:flex}
-.sidebar{width:220px;background:#0d1117;border-right:1px solid #30363d;padding:20px}
-.sidebar button{
-  display:block;width:100%;margin-bottom:8px;
-  padding:10px;background:#161b22;border:none;color:#c9d1d9;
-  border-radius:6px;cursor:pointer
-}
-.main{flex:1;padding:30px}
-.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px}
-.download{
-  display:inline-block;margin-top:12px;
-  background:#238636;padding:12px 22px;
-  border-radius:6px;color:white;text-decoration:none
-}
-.disabled{background:#555;pointer-events:none}
-.hidden{display:none}
-</style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--color-canvas-default);
+            color: #c9d1d9;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR (uDroid Style) --- */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--color-canvas-overlay);
+            border-right: 1px solid var(--color-border-default);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--color-border-default);
+        }
+
+        nav { padding: 15px 10px; flex-grow: 1; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #8b949e;
+            transition: 0.2s;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover { background: var(--color-btn-hover); color: #c9d1d9; }
+        .nav-item.active { background: #1f6feb26; color: var(--color-accent-fg); border-left: 3px solid #1f6feb; border-radius: 0 6px 6px 0; }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 16px 32px;
+            background: var(--color-canvas-default);
+            border-bottom: 1px solid var(--color-border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-area { padding: 32px; max-width: 1000px; margin: 0 auto; width: 100%; }
+
+        /* --- GITHUB STYLE COMPONENTS --- */
+        .repo-card {
+            background: var(--color-canvas-overlay);
+            border: 1px solid var(--color-border-default);
+            border-radius: 6px;
+            margin-bottom: 24px;
+        }
+
+        .repo-header {
+            padding: 16px;
+            background: #161b22;
+            border-bottom: 1px solid var(--color-border-default);
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .repo-body { padding: 16px; }
+
+        /* Badge Status */
+        .badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 2em;
+            border: 1px solid var(--color-border-default);
+            color: var(--color-text-muted);
+        }
+
+        .badge-green { color: var(--color-success-fg); border-color: #238636; }
+
+        /* File List Style (uDroid/Github) */
+        .file-list { border-top: 1px solid var(--color-border-default); }
+        .file-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 120px;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--color-border-default);
+            font-size: 13px;
+            align-items: center;
+        }
+        .file-row:hover { background: #161b22; }
+        .file-row a { color: var(--color-accent-fg); text-decoration: none; }
+
+        .btn-primary {
+            background: #238636;
+            color: white;
+            padding: 5px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(27,31,35,.15);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hidden { display: none; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            aside { display: none; } /* Perlu JS untuk toggle menu di HP */
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-<h2>💀 MyModels Distribution</h2>
-</header>
+<aside>
+    <div class="brand">
+        <span style="font-size: 24px;">💀</span> 
+        <span>MyModels</span>
+    </div>
+    <nav>
+        <div class="nav-item active" onclick="showPage('overview', this)">🏠 Dashboard</div>
+        <div class="nav-item" onclick="showPage('models', this)">📦 Model Library</div>
+        <div class="nav-item" onclick="showPage('releases', this)">📥 Downloads</div>
+        <div class="nav-item" onclick="showPage('settings', this)">⚙️ Settings</div>
+    </nav>
+    <div style="padding: 20px; font-size: 11px; color: #484f58; border-top: 1px solid var(--color-border-default);">
+        System: Android x64<br>
+        Status: <span style="color:var(--color-success-fg)">● Online</span>
+    </div>
+</aside>
 
-<div class="container">
+<main>
+    <header>
+        <div style="font-size: 14px;">
+            <span style="color: #8b949e;">Projects /</span> <b>Distribution</b>
+        </div>
+        <div class="badge badge-green">v2.4.0-stable</div>
+    </header>
 
-<div class="sidebar">
-<button onclick="show('overview')">🏠 Overview</button>
-<button onclick="show('releases')">📥 Releases</button>
-<button onclick="show('models')">📦 Models</button>
-<button onclick="show('versions')">📜 Versions</button>
-<button onclick="show('channels')">🧪 Channels</button>
-</div>
+    <div class="content-area">
+        
+        <div id="overview" class="page">
+            <div class="repo-card">
+                <div class="repo-header">
+                    <b>README.md</b>
+                    <span style="font-size: 12px; color: #8b949e;">Latest Update: 2 days ago</span>
+                </div>
+                <div class="repo-body">
+                    <h2 style="margin-top:0">🚀 Selamat Datang di MyModels</h2>
+                    <p>Distribusi model AI teroptimasi untuk perangkat mobile dan workstation lokal. Dikelola langsung dari Kediri untuk dunia.</p>
+                    <a href="#" class="btn-primary" id="mainDownload">Download APK Terbaru</a>
+                </div>
+            </div>
+        </div>
 
-<div class="main">
+        <div id="models" class="page hidden">
+            <div class="repo-card">
+                <div class="repo-header">
+                    <b>Model Marketplace</b>
+                    <span class="badge">Local Repo</span>
+                </div>
+                <div class="file-list">
+                    <div class="file-row" style="background: #161b22; font-weight: bold; color: #8b949e;">
+                        <div>Name</div>
+                        <div>Type</div>
+                        <div>Action</div>
+                    </div>
+                    <div class="file-row">
+                        <div>📄 <a href="#">llama-3-8b-instruct.Q4_K_M.gguf</a></div>
+                        <div style="color:#8b949e">GGUF</div>
+                        <a href="#" class="badge">Download</a>
+                    </div>
+                    <div class="file-row">
+                        <div>📄 <a href="#">mistral-7b-v0.3.Q8_0.gguf</a></div>
+                        <div style="color:#8b949e">GGUF</div>
+                        <a href="#" class="badge">Download</a>
+                    </div>
+                    <div class="file-row">
+                        <div>📄 <a href="#">phi-3-mini-4k.bin</a></div>
+                        <div style="color:#8b949e">Tensor</div>
+                        <a href="#" class="badge">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- OVERVIEW -->
-<div id="overview" class="card">
-<h2>Latest Release</h2>
-<p>Version: <b id="version">Loading...</b></p>
+        <div id="releases" class="page hidden">
+            <div class="repo-card">
+                <div class="repo-header"><b>Release History</b></div>
+                <div class="repo-body" id="changelog-container">
+                    <p>Memuat riwayat rilis...</p>
+                </div>
+            </div>
+        </div>
 
-<a id="downloadBtn" class="download disabled">
-📥 APK belum tersedia
-</a>
-</div>
-
-<!-- RELEASES -->
-<div id="releases" class="card hidden">
-<h2>Download</h2>
-<p id="releaseInfo">Loading...</p>
-</div>
-
-<!-- MODELS -->
-<div id="models" class="card hidden">
-<h2>Model Marketplace 📦</h2>
-
-<a href="../models/llama3.gguf" download class="download">
-Download Llama 3 GGUF
-</a>
-
-</div>
-
-<!-- VERSIONS -->
-<div id="versions" class="card hidden">
-<h2>Changelog</h2>
-<ul id="changelog"></ul>
-</div>
-
-<!-- CHANNELS -->
-<div id="channels" class="card hidden">
-<h2>Release Channels 🧪</h2>
-<p>Stable — Recommended</p>
-<p>Beta — Testing</p>
-<p>Dev — Experimental</p>
-</div>
-
-</div>
-</div>
+    </div>
+</main>
 
 <script>
+    // Navigation Logic
+    function showPage(pageId, element) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        // Show target
+        document.getElementById(pageId).classList.remove('hidden');
+        
+        // Active Class logic
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+    }
 
-// 🔀 NAVIGATION
-function show(id){
-  document.querySelectorAll(".main .card")
-    .forEach(e=>e.classList.add("hidden"))
-  document.getElementById(id)
-    .classList.remove("hidden")
-}
+    // Fetch Data (Sesuai struktur folder Anda)
+    fetch("../releases/version.json")
+    .then(r => r.json())
+    .then(data => {
+        // Update Main Download Link
+        if(data.apk) {
+            const dBtn = document.getElementById("mainDownload");
+            dBtn.href = "../releases/" + data.apk;
+            dBtn.innerText = "Download APK (v" + data.version + ")";
+        }
 
-// 🔄 LOAD VERSION DATA
-fetch("../releases/version.json")
-.then(r=>r.json())
-.then(data=>{
-
-  document.getElementById("version").textContent=data.version
-
-  // CHANGELOG
-  const list=document.getElementById("changelog")
-  data.changelog?.forEach(c=>{
-    const li=document.createElement("li")
-    li.textContent=c
-    list.appendChild(li)
-  })
-
-  // APK DETECTION 💀
-  if(data.apk){
-
-    const btn=document.getElementById("downloadBtn")
-
-    btn.href="../releases/"+data.apk
-    btn.textContent="📥 Download APK"
-    btn.classList.remove("disabled")
-
-    document.getElementById("releaseInfo")
-      .textContent="APK tersedia: "+data.apk
-
-  }else{
-
-    document.getElementById("releaseInfo")
-      .textContent="Belum ada APK"
-
-  }
-
-})
-.catch(()=>{
-  document.getElementById("version").textContent="Error"
-})
-
+        // Build Changelog
+        const container = document.getElementById("changelog-container");
+        if(data.changelog) {
+            container.innerHTML = "<h4>What's New in " + data.version + "</h4><ul>" + 
+                data.changelog.map(item => `<li>${item}</li>`).join('') + 
+                "</ul>";
+        }
+    })
+    .catch(e => console.log("Gagal memuat version.json"));
 </script>
 
 </body>
