@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>MyModels Repository</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Arial;
+  background:#0d1117;
+  color:#c9d1d9;
+}
+
+/* HEADER */
+header{
+  background:#161b22;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  border-bottom:1px solid #30363d;
+}
+
+.logo{
+  width:32px;
+  border-radius:6px;
+}
+
+h1{
+  font-size:18px;
+  margin:0;
+}
+
+/* LAYOUT */
+.container{
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;
+  background:#0d1117;
+  border-right:1px solid #30363d;
+  padding:20px;
+}
+
+.sidebar a{
+  display:block;
+  padding:10px;
+  border-radius:6px;
+  color:#c9d1d9;
+  text-decoration:none;
+  margin-bottom:5px;
+}
+
+.sidebar a:hover{
+  background:#161b22;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:30px;
+}
+
+/* CARD */
+.card{
+  background:#161b22;
+  border:1px solid #30363d;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.download{
+  display:inline-block;
+  padding:12px 20px;
+  background:#238636;
+  color:white;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.download:hover{
+  background:#2ea043;
+}
+
+.model{
+  border-top:1px solid #30363d;
+  padding-top:15px;
+  margin-top:15px;
+}
+
+footer{
+  opacity:.6;
+  margin-top:40px;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  .container{flex-direction:column;}
+  .sidebar{width:100%;}
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <img src="icon.png" class="logo">
+  <h1>MyModels</h1>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <a href="#">🏠 Home</a>
+    <a href="#">📥 Releases</a>
+    <a href="#">📦 Models</a>
+    <a href="#">📜 Changelog</a>
+    <a href="#">⭐ About</a>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- RELEASE CARD -->
+    <div class="card">
+
+      <h2>Latest Release</h2>
+
+      <p><b>Version:</b> 1.0.373</p>
+      <p><b>Size:</b> 28 MB</p>
+      <p><b>Platform:</b> Android</p>
+
+      <a href="../releases/MyModels.apk" download>
+              📥 Download APK
+      </a>
+
+    </div>
+
+    <!-- CHANGELOG -->
+    <div class="card">
+
+      <h2>Changelog</h2>
+
+      <ul>
+        <li>🔥 Performa AI meningkat</li>
+        <li>⚡ Startup lebih cepat</li>
+        <li>🐞 Bug fixes</li>
+        <li>🎨 UI diperbarui</li>
+      </ul>
+
+    </div>
+
+    <!-- MODELS -->
+    <div class="card">
+
+      <h2>AI Models</h2>
+
+      <div class="model">
+        <b>Llama 3 8B</b>
+        <p>4.2 GB</p>
+        <a href="models/llama3.gguf" download class="download">
+          Download
+        </a>
+      </div>
+
+      <div class="model">
+        <b>Mistral 7B</b>
+        <p>3.8 GB</p>
+        <a href="models/mistral.gguf" download class="download">
+          Download
+        </a>
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 MyModels — Made with by Nasa
+    </footer>
+
+  </div>
+
+</div>
+
+</body>
+</html>
