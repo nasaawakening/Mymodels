@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>MyModels Repository</title>
+<title>MyModels Distribution</title>
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 body{
@@ -17,32 +19,20 @@ body{
 /* HEADER */
 header{
   background:#161b22;
-  padding:12px 20px;
+  padding:14px 20px;
   display:flex;
   align-items:center;
-  gap:15px;
+  gap:12px;
   border-bottom:1px solid #30363d;
 }
 
-.logo{
-  width:32px;
-  border-radius:6px;
-}
+.logo{width:40px;border-radius:8px}
 
-h1{
-  font-size:18px;
-  margin:0;
-}
-
-/* LAYOUT */
-.container{
-  display:flex;
-  min-height:100vh;
-}
+.container{display:flex}
 
 /* SIDEBAR */
 .sidebar{
-  width:240px;
+  width:230px;
   background:#0d1117;
   border-right:1px solid #30363d;
   padding:20px;
@@ -54,20 +44,14 @@ h1{
   border-radius:6px;
   color:#c9d1d9;
   text-decoration:none;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
-.sidebar a:hover{
-  background:#161b22;
-}
+.sidebar a:hover{background:#161b22}
 
 /* MAIN */
-.main{
-  flex:1;
-  padding:30px;
-}
+.main{flex:1;padding:30px}
 
-/* CARD */
 .card{
   background:#161b22;
   border:1px solid #30363d;
@@ -77,121 +61,131 @@ h1{
 }
 
 .download{
-  display:inline-block;
-  padding:12px 20px;
   background:#238636;
-  color:white;
+  padding:12px 22px;
   border-radius:6px;
+  color:white;
   text-decoration:none;
   font-weight:bold;
 }
 
-.download:hover{
-  background:#2ea043;
-}
-
 .model{
   border-top:1px solid #30363d;
-  padding-top:15px;
   margin-top:15px;
+  padding-top:15px;
 }
 
-footer{
-  opacity:.6;
-  margin-top:40px;
-}
+footer{opacity:.6;margin-top:40px}
 
 /* MOBILE */
 @media(max-width:800px){
-  .container{flex-direction:column;}
-  .sidebar{width:100%;}
+  .container{flex-direction:column}
+  .sidebar{width:100%}
 }
 </style>
-
 </head>
 
 <body>
 
 <header>
-  <img src="icon.png" class="logo">
-  <h1>MyModels</h1>
+  <img src="../icon.png" class="logo">
+  <h2>MyModels Distribution</h2>
 </header>
 
 <div class="container">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-    <a href="#">🏠 Home</a>
-    <a href="#">📥 Releases</a>
-    <a href="#">📦 Models</a>
-    <a href="#">📜 Changelog</a>
-    <a href="#">⭐ About</a>
-
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="main">
-
-    <!-- RELEASE CARD -->
-    <div class="card">
-
-      <h2>Latest Release</h2>
-
-      <p><b>Version:</b> 1.0.373</p>
-      <p><b>Size:</b> 28 MB</p>
-      <p><b>Platform:</b> Android</p>
-
-      <a href="../releases/MyModels.apk" download>
-              📥 Download APK
-      </a>
-
-    </div>
-
-    <!-- CHANGELOG -->
-    <div class="card">
-
-      <h2>Changelog</h2>
-
-      <ul>
-        <li>🔥 Performa AI meningkat</li>
-        <li>⚡ Startup lebih cepat</li>
-        <li>🐞 Bug fixes</li>
-        <li>🎨 UI diperbarui</li>
-      </ul>
-
-    </div>
-
-    <!-- MODELS -->
-    <div class="card">
-
-      <h2>AI Models</h2>
-
-      <div class="model">
-        <b>Llama 3 8B</b>
-        <p>4.2 GB</p>
-        <a href="models/llama3.gguf" download class="download">
-          Download
-        </a>
-      </div>
-
-      <div class="model">
-        <b>Mistral 7B</b>
-        <p>3.8 GB</p>
-        <a href="models/mistral.gguf" download class="download">
-          Download
-        </a>
-      </div>
-
-    </div>
-
-    <footer>
-      © 2026 MyModels — Made with by Nasa
-    </footer>
-
-  </div>
+<a href="#">🏠 Overview</a>
+<a href="#">📥 Releases</a>
+<a href="#">📦 Models</a>
+<a href="#">📜 Versions</a>
+<a href="#">🧪 Channels</a>
 
 </div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- LATEST RELEASE -->
+<div class="card">
+
+<h2>Latest Stable Release</h2>
+
+<p><b>Version:</b> <span id="version">Loading...</span></p>
+
+<a href="../releases/MyModels.apk" download class="download">
+📥 Download APK
+</a>
+
+</div>
+
+<!-- CHANGELOG -->
+<div class="card">
+
+<h2>Changelog</h2>
+
+<ul id="changelog"></ul>
+
+</div>
+
+<!-- MODELS -->
+<div class="card">
+
+<h2>Model Marketplace 📦</h2>
+
+<div class="model">
+<b>Llama 3 8B</b>
+<p>4.2 GB — GGUF</p>
+<a href="../models/llama3.gguf" download class="download">
+Download
+</a>
+</div>
+
+</div>
+
+<!-- CHANNELS -->
+<div class="card">
+
+<h2>Release Channels 🧪</h2>
+
+<p>Stable — Recommended</p>
+<p>Beta — Testing features</p>
+<p>Dev — Experimental</p>
+
+</div>
+
+<footer>
+© 2026 MyModels — Made with by Nasa
+</footer>
+
+</div>
+</div>
+
+<script>
+
+// 🔄 OTA VERSION API
+fetch("../releases/version.json")
+.then(r=>r.json())
+.then(data=>{
+  document.getElementById("version").textContent=data.version
+
+  const list=document.getElementById("changelog")
+  data.changelog?.forEach(c=>{
+    const li=document.createElement("li")
+    li.textContent=c
+    list.appendChild(li)
+  })
+})
+
+
+// 📱 PWA INSTALL
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js")
+}
+
+</script>
 
 </body>
 </html>
