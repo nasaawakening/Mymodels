@@ -1,4 +1,8 @@
 {
-  "version": "1.0.383",
-  "apk": "releases/MyModels.apk"
+  "version": "1.0.373",
+  "changelog": [
+    "🔥 Performa AI meningkat",
+    "⚡ Startup lebih cepat",
+    "🐞 Bug fixes"
+  ]
 }
