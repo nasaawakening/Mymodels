@@ -3,187 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>MyModels Distribution</title>
 
-<link rel="manifest" href="manifest.json">
-
 <style>
-body{
-  margin:0;
-  font-family:system-ui,Segoe UI,Arial;
-  background:#0d1117;
-  color:#c9d1d9;
-}
-
-/* HEADER */
-header{
-  background:#161b22;
-  padding:14px 20px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  border-bottom:1px solid #30363d;
-}
-
-.logo{width:40px;border-radius:8px}
-
+body{margin:0;font-family:system-ui;background:#0d1117;color:#c9d1d9}
+header{background:#161b22;padding:14px 20px;border-bottom:1px solid #30363d}
 .container{display:flex}
-
-/* SIDEBAR */
-.sidebar{
-  width:230px;
-  background:#0d1117;
-  border-right:1px solid #30363d;
-  padding:20px;
+.sidebar{width:220px;background:#0d1117;border-right:1px solid #30363d;padding:20px}
+.sidebar button{
+  display:block;width:100%;margin-bottom:8px;
+  padding:10px;background:#161b22;border:none;color:#c9d1d9;
+  border-radius:6px;cursor:pointer
 }
-
-.sidebar a{
-  display:block;
-  padding:10px;
-  border-radius:6px;
-  color:#c9d1d9;
-  text-decoration:none;
-  margin-bottom:6px;
-}
-
-.sidebar a:hover{background:#161b22}
-
-/* MAIN */
 .main{flex:1;padding:30px}
-
-.card{
-  background:#161b22;
-  border:1px solid #30363d;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-}
-
+.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px}
 .download{
-  background:#238636;
-  padding:12px 22px;
-  border-radius:6px;
-  color:white;
-  text-decoration:none;
-  font-weight:bold;
+  display:inline-block;margin-top:12px;
+  background:#238636;padding:12px 22px;
+  border-radius:6px;color:white;text-decoration:none
 }
-
-.model{
-  border-top:1px solid #30363d;
-  margin-top:15px;
-  padding-top:15px;
-}
-
-footer{opacity:.6;margin-top:40px}
-
-/* MOBILE */
-@media(max-width:800px){
-  .container{flex-direction:column}
-  .sidebar{width:100%}
-}
+.disabled{background:#555;pointer-events:none}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
 <header>
-  <img src="../icon.png" class="logo">
-  <h2>MyModels Distribution</h2>
+<h2>💀 MyModels Distribution</h2>
 </header>
 
 <div class="container">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-
-<a href="#">🏠 Overview</a>
-<a href="#">📥 Releases</a>
-<a href="#">📦 Models</a>
-<a href="#">📜 Versions</a>
-<a href="#">🧪 Channels</a>
-
+<button onclick="show('overview')">🏠 Overview</button>
+<button onclick="show('releases')">📥 Releases</button>
+<button onclick="show('models')">📦 Models</button>
+<button onclick="show('versions')">📜 Versions</button>
+<button onclick="show('channels')">🧪 Channels</button>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<!-- LATEST RELEASE -->
-<div class="card">
+<!-- OVERVIEW -->
+<div id="overview" class="card">
+<h2>Latest Release</h2>
+<p>Version: <b id="version">Loading...</b></p>
 
-<h2>Latest Stable Release</h2>
-
-<p><b>Version:</b> <span id="version">Loading...</span></p>
-
-<a href="../releases/MyModels.apk" download class="download">
-📥 Download APK
+<a id="downloadBtn" class="download disabled">
+📥 APK belum tersedia
 </a>
-
 </div>
 
-<!-- CHANGELOG -->
-<div class="card">
-
-<h2>Changelog</h2>
-
-<ul id="changelog"></ul>
-
+<!-- RELEASES -->
+<div id="releases" class="card hidden">
+<h2>Download</h2>
+<p id="releaseInfo">Loading...</p>
 </div>
 
 <!-- MODELS -->
-<div class="card">
-
+<div id="models" class="card hidden">
 <h2>Model Marketplace 📦</h2>
 
-<div class="model">
-<b>Llama 3 8B</b>
-<p>4.2 GB — GGUF</p>
 <a href="../models/llama3.gguf" download class="download">
-Download
+Download Llama 3 GGUF
 </a>
+
 </div>
 
+<!-- VERSIONS -->
+<div id="versions" class="card hidden">
+<h2>Changelog</h2>
+<ul id="changelog"></ul>
 </div>
 
 <!-- CHANNELS -->
-<div class="card">
-
+<div id="channels" class="card hidden">
 <h2>Release Channels 🧪</h2>
-
 <p>Stable — Recommended</p>
-<p>Beta — Testing features</p>
+<p>Beta — Testing</p>
 <p>Dev — Experimental</p>
-
 </div>
-
-<footer>
-© 2026 MyModels — Made with by Nasa
-</footer>
 
 </div>
 </div>
 
 <script>
 
-// 🔄 OTA VERSION API
+// 🔀 NAVIGATION
+function show(id){
+  document.querySelectorAll(".main .card")
+    .forEach(e=>e.classList.add("hidden"))
+  document.getElementById(id)
+    .classList.remove("hidden")
+}
+
+// 🔄 LOAD VERSION DATA
 fetch("../releases/version.json")
 .then(r=>r.json())
 .then(data=>{
+
   document.getElementById("version").textContent=data.version
 
+  // CHANGELOG
   const list=document.getElementById("changelog")
   data.changelog?.forEach(c=>{
     const li=document.createElement("li")
     li.textContent=c
     list.appendChild(li)
   })
+
+  // APK DETECTION 💀
+  if(data.apk){
+
+    const btn=document.getElementById("downloadBtn")
+
+    btn.href="../releases/"+data.apk
+    btn.textContent="📥 Download APK"
+    btn.classList.remove("disabled")
+
+    document.getElementById("releaseInfo")
+      .textContent="APK tersedia: "+data.apk
+
+  }else{
+
+    document.getElementById("releaseInfo")
+      .textContent="Belum ada APK"
+
+  }
+
 })
-
-
-// 📱 PWA INSTALL
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js")
-}
+.catch(()=>{
+  document.getElementById("version").textContent="Error"
+})
 
 </script>
 
